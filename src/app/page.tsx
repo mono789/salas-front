@@ -1,4 +1,4 @@
-import Botonprueba from './Components/Botonprueba'
+import Botonprueba from '../Components/Botonprueba'
 import 'bootstrap/dist/css/bootstrap.css'
 
 export default function Home() {
