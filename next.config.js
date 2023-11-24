@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  basePath: '/salasinfo',
+  output: 'export',
+  distDir: 'dist'
+}
 
 module.exports = nextConfig
