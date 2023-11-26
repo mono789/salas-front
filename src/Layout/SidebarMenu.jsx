@@ -4,26 +4,29 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 function SidebarMenu(){
     return(
-        <div className='container-fluid'>
+        <div className='container'>
+            
             <div className='row'>
-                <div className='bg-success col-auto col-md-3 min-vh-100'>
+                <div className='bg-success col-auto col-md-4 min-vh-100'>
                     <a className='text-decoration-none text-white d-flex align-itemcenter'>
-                        <span className='ms-1 fs-4'>Inicio</span>
-                    </a>
+                        <i className='bi bi-house fs-4'></i>
+                        <span className='ms-2 fs-4'>Inicio</span>
+                    </a>   
+                    <br></br>
                     <ul className="nav nav-pills flex-column">
-                        <li className="nav-item text-white fs-4">
+                        <li className="nav-item text-white fs-6">
                             <a href="#" className="nav-link text-white fs-5" aria-current="page">
-                                <i className='bi bi-table'></i>
+                                <i className="bi bi-house-check"></i>
                                 <span className='ms-2'>Salas Disponibles</span>
                             </a>
                         </li>
-                        <li className="nav-item text-white fs-4">
+                        <li className="nav-item text-white fs-6">
                             <a href="#" className="nav-link text-white fs-5" aria-current="page">
-                                <i className='bi bi-table'></i>
-                                <span className='ms-2'>Software Dispoble</span>
+                                <i className="bi bi-pc-display-horizontal"></i>
+                                <span className='ms-2'>Software Disponible</span>
                             </a>
                         </li>
-                        <li className="nav-item text-white fs-4">
+                        <li className="nav-item text-white fs-6">
                             <a href="#" className="nav-link text-white fs-5" aria-current="page">
                                 <i className='bi bi-grid'></i>
                                 <span className='ms-2'>Generar Reserva</span>
