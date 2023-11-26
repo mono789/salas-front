@@ -1,19 +1,9 @@
-/*import Botonprueba from '../Components/Botonprueba'
+import SidebarMenu from '../Components/SidebarMenu'
 import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 export default function Home() {
  return (
-  <><Botonprueba> 
-    <p>
-      Reservas
-    </p>
-  </Botonprueba>
-
-  <Botonprueba> 
-    <p>
-      Software
-    </p>
-  </Botonprueba>
-  </>
+  <SidebarMenu/>
  )
-}*/
+}
