@@ -6,7 +6,7 @@ import { Tittle } from "@/Pages/Tittle";
 
 export default function Home() {
   return (
-    <div className="container-center">
+    <div className="container-left">
       <div className="row">
         <div className="col-6">
           <SidebarMenu />
