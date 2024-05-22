@@ -1,8 +1,8 @@
-import SidebarMenu from "../Layout/SidebarMenu";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { Index } from "@/Pages/Index";
 import { Tittle } from "@/Pages/Tittle";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap/dist/css/bootstrap.css";
+import SidebarMenu from "../Layout/SidebarMenu";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
         <div className="col-6">
           <Tittle />
           <Index />
-          </div>
+        </div>
       </div>
     </div>
   );
