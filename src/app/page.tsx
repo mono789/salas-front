@@ -1,14 +1,12 @@
-//import { Index } from "@/Pages/Index";
-//import { Tittle } from "@/Pages/Tittle";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import "bootstrap/dist/css/bootstrap.css";
-import Sidebar from "../molecules/Sidebar";
-//import SidebarMenu from "../Layout/SidebarMenu";
+import React from 'react'
+import Footer from './components/home/footer'
 
-export default function Home() {
+const Page = () => {
   return (
-    <div className="container-left">
-      <Sidebar />
+    <div>
+      <Footer />
     </div>
-  );
+  )
 }
+
+export default Page
