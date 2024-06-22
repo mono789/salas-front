@@ -1,5 +1,5 @@
-import Footer from "@/app/components/home/footer";
-import Navbar from "@/app/components/home/navbar";
+import Footer from "@/app/home/footer";
+import Navbar from "@/app/home/navbar";
 import React from "react";
 import Table from "./table";
 import Description from "./description";
