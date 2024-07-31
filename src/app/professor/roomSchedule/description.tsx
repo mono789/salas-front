@@ -28,7 +28,7 @@ const Description = () => {
           <div className="mt-2">
             <h1 className="text-green-600">Implementos:</h1>
             <span>
-              Tablero, videobeam, aire acondicionado, 24 sillas, 24 mesas
+              Tablero, video Beam, aire acondicionado, 24 sillas, 24 mesas
             </span>
           </div>
           <div className="mt-2">
@@ -41,6 +41,11 @@ const Description = () => {
               Microsoft Office 2019, Visual Studio Code, Google Chrome, Mozilla
               Firefox, Zoom, Microsoft Teams, R Studio, Python
             </span>
+          </div>
+          <div className="flex justify-start mt-5 mb-3">
+            <button className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-green-500 rounded-md hover:bg-green-600 focus:outline-none">
+              Generar reserva
+            </button>
           </div>
         </div>
       </div>

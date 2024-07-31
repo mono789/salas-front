@@ -1,14 +1,14 @@
-import Footer from "@/app/home/footer";
-import Navbar from "@/app/home/navbar";
+import Footer from "@/app/student/home/footer";
+import Navbar from "@/app/student/home/navbar";
 import React from "react";
 import Table from "./table";
 import Description from "./description";
 
-const Index = () => {
+const Page = () => {
   return (
     <div>
       <Navbar />
-      <div className="justify-center" style={{ display: 'flex' }}>
+      <div className="justify-center" style={{ display: "flex" }}>
         <Table />
         <Description />
       </div>
@@ -17,4 +17,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Page;
