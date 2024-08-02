@@ -1,19 +1,20 @@
 import React from "react";
-import Management from "./management";
 import Navbar from "@/app/student/home/navbar";
 import Footer from "@/app/student/home/footer";
+import Role from "./role";
 
 const Page = () => {
   return (
-    <div
-      className="bg-cover bg-center py-8"
-      style={{
-        backgroundImage: "url('/assets/bottom.png')",
-      }}
-    >
+    <div>
       <Navbar />
-
-      <Management />
+      <div
+        className="bg-cover bg-center py-8"
+        style={{
+          backgroundImage: "url('/assets/bottom.png')",
+        }}
+      >
+        <Role />
+      </div>
       <Footer />
     </div>
   );

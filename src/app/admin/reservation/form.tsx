@@ -19,11 +19,11 @@ const Form = () => {
     <div>
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto flex flex-wrap items-center">
-          <div className="bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
+          <div className="bg-white bg-opacity-30 backdrop-blur-lg border border-gray-300 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 shadow-lg">
             <h2 className="text-gray-900 text-xl font-semibold title-font mb-5">
               Reserva
             </h2>
-            <div className="relative w-1/2 ml-2 mb-4">
+            <div className="relative w-4/5 ml-2 mb-4">
                 <label className="text-gray-700 dark:text-gray-200 text-sm">
                   Selecciona la fecha
                 </label>
@@ -35,7 +35,6 @@ const Form = () => {
                 />
               </div>
             <div className="grid grid-cols-2 gap-4 mb-4">
-              
               <div className="relative">
                 <label className="text-gray-700 dark:text-gray-200 text-sm">
                   Hora de inicio

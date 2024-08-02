@@ -18,7 +18,12 @@ const Page = () => {
             alignItems: "center",
           }}
         >
-          <div style={{ textAlign: "justify" }}>
+          <div
+            className="bg-cover bg-center py-8"
+            style={{
+              backgroundImage: "url('/assets/bottom.png')",
+            }}
+          >
             <h2 className="text-center mb-4 mt-8 text-lg font-semibold">
               ¡Hola docente! Selecciona los elementos de hardware que necesitas
               que estén instalados en la sala.

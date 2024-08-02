@@ -8,7 +8,12 @@ const Page = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex justify-center items-start">
+      <div
+        className="bg-cover bg-center py-8 flex justify-center items-start"
+        style={{
+          backgroundImage: "url('/assets/bottom.png')",
+        }}
+      >
         <Form />
         <Description />
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const AdminReserva = () => {
+const List = () => {
   const reservations = [
     {
       room: "20-234",
@@ -278,4 +278,4 @@ const AdminReserva = () => {
   );
 };
 
-export default AdminReserva;
+export default List;
