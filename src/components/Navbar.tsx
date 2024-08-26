@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import homeIcon from "@iconify/icons-mdi/home";
 
-const Index = () => {
+const Navbar = () => {
   return (
     <div>
       <nav
@@ -81,4 +81,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Navbar;

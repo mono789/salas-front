@@ -1,4 +1,3 @@
-import Navbar from "@/app/student/home/navbar";
 import Sidebar from "@/app/student/home/sidebar";
 import React from "react";
 import List from "./list";
@@ -7,7 +6,6 @@ import List from "./list";
 const Page = () => {
   return (
     <div>
-      <Navbar />
       <div style={{ display: "flex" }}>
         <Sidebar />
         <div

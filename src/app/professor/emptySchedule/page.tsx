@@ -1,11 +1,9 @@
-import Navbar from "@/app/student/home/navbar";
 import React from "react";
 import Table from "./table";
 
 const Page = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
       <div
         className="flex-grow flex flex-col justify-center items-center bg-cover bg-center py-8"
         style={{

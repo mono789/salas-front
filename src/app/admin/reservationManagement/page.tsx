@@ -1,7 +1,5 @@
 import React from "react";
 import Management from "./management";
-import Navbar from "@/app/student/home/navbar";
-
 
 const Page = () => {
   return (
@@ -11,8 +9,6 @@ const Page = () => {
         backgroundImage: "url('/assets/bottom.png')",
       }}
     >
-      <Navbar />
-
       <Management />
     </div>
   );
