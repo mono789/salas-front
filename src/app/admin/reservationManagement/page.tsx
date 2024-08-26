@@ -1,7 +1,7 @@
 import React from "react";
 import Management from "./management";
 import Navbar from "@/app/student/home/navbar";
-import Footer from "@/app/student/home/footer";
+
 
 const Page = () => {
   return (
@@ -14,7 +14,6 @@ const Page = () => {
       <Navbar />
 
       <Management />
-      <Footer />
     </div>
   );
 };

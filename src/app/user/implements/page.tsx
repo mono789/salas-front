@@ -2,7 +2,7 @@ import Navbar from "@/app/student/home/navbar";
 import Sidebar from "@/app/student/home/sidebar";
 import React from "react";
 import List from "./list";
-import Footer from "@/app/student/home/footer";
+
 
 const Page = () => {
   return (
@@ -29,7 +29,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };

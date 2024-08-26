@@ -1,7 +1,7 @@
 import Navbar from "@/app/student/home/navbar";
 import React from "react";
 import Calendar from "./calendar";
-import Footer from "@/app/student/home/footer";
+
 
 const Page = () => {
   return (
@@ -18,7 +18,7 @@ const Page = () => {
         </h2>
         <Calendar />
       </div>
-      <Footer />
+
     </div>
   );
 };

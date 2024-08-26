@@ -1,5 +1,4 @@
 import React from 'react'
-import Footer from './footer'
 import Navbar from './navbar'
 import Sidebar from './sidebar'
 import Rooms from './rooms'
@@ -12,7 +11,7 @@ const Page = () => {
         <Sidebar />
         <Rooms />
       </div>
-      <Footer />
+
     </div>
   )
 }

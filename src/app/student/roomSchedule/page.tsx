@@ -1,4 +1,4 @@
-import Footer from "@/app/student/home/footer";
+
 import Navbar from "@/app/student/home/navbar";
 import React from "react";
 import Table from "./table";
@@ -12,7 +12,6 @@ const Page = () => {
         <Table />
         <Description />
       </div>
-      <Footer />
     </div>
   );
 };

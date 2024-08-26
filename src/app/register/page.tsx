@@ -1,12 +1,10 @@
+import Link from "next/link";
 import React from "react";
 
 const Page = () => {
   return (
     <div
-      className="flex flex-col items-center justify-center h-screen bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url(/assets/bottom.png)`,
-      }}
+      className="flex flex-col items-center justify-center h-screen"
     >
       <section className="bg-white dark:bg-gray-900 rounded-lg">
         <div className="container flex items-center justify-center px-6 mx-auto mt-8 mb-8">
@@ -20,19 +18,7 @@ const Page = () => {
             </div>
 
             <div className="flex items-center justify-center mt-6">
-              <a
-                href="#"
-                className="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b dark:border-gray-400 dark:text-gray-300"
-              >
-                sign in
-              </a>
-
-              <a
-                href="#"
-                className="w-1/3 pb-4 font-medium text-center text-gray-800 capitalize border-b-2 border-blue-500 dark:border-blue-400 dark:text-white"
-              >
-                sign up
-              </a>
+                Registro
             </div>
 
             <div className="relative flex items-center mt-8">
@@ -141,12 +127,12 @@ const Page = () => {
               </button>
 
               <div className="mt-6 text-center ">
-                <a
-                  href="#"
+                <Link
+                  href="/"
                   className="text-sm text-blue-500 hover:underline dark:text-blue-400"
                 >
                   ¿Ya tienes una cuenta?
-                </a>
+                </Link>
               </div>
             </div>
           </form>

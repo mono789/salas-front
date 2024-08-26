@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "@/app/student/home/navbar";
-import Footer from "@/app/student/home/footer";
 import Role from "./role";
 
 const Page = () => {
@@ -15,7 +14,7 @@ const Page = () => {
       >
         <Role />
       </div>
-      <Footer />
+      
     </div>
   );
 };

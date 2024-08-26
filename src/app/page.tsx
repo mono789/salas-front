@@ -1,7 +1,10 @@
+import Link from "next/link";
 import React from "react";
 
 const Page = () => {
   return (
+
+    
     <div
       className="flex flex-col items-center justify-center h-screen bg-cover bg-center bg-no-repeat"
       style={{
@@ -65,15 +68,16 @@ const Page = () => {
             ¿No tienes una cuenta?{" "}
           </span>
 
-          <a
-            href="#"
+          <Link
+            href="/register"
             className="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
           >
             Regístrate
-          </a>
+          </Link>
         </div>
       </div>
     </div>
+    
   );
 };
 
