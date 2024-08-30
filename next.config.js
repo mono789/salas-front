@@ -2,7 +2,8 @@
 const nextConfig = {
   basePath: '/salasinfo',
   output: 'export',
-  distDir: 'dist'
+  distDir: 'dist',
+  images: {unoptimized:true}
 }
 
 module.exports = nextConfig
