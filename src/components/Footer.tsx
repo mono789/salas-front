@@ -5,7 +5,7 @@ const Footer = () => {
     <div>
       <footer className="bg-white dark:bg-gray-900">
         <div className="container flex flex-col items-center justify-between p-6 mx-auto space-y-4 sm:space-y-0 sm:flex-row">
-          <a href="#">
+          <a href="https://udea.edu.co/">
             <img
               className="w-auto h-7"
               src="https://www.udea.edu.co/wps/wcm/connect/udea/2288a382-341c-41ee-9633-702a83d5ad2b/logosimbolo-horizontal-png.png?MOD=AJPERES&CVID=ljeSAX9"
