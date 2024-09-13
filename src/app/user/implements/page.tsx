@@ -1,7 +1,6 @@
-import Sidebar from "@/app/student/home/sidebar";
 import React from "react";
 import List from "./list";
-
+import Sidebar from "@/components/Sidebar";
 
 const Page = () => {
   return (
@@ -27,7 +26,6 @@ const Page = () => {
           </div>
         </div>
       </div>
-      
     </div>
   );
 };
