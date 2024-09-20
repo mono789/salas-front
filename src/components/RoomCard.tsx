@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface RoomProps {
@@ -17,14 +18,18 @@ const RoomCard: React.FC<RoomProps> = ({ blockNumber, roomNumber }) => {
         height={150}
       />
       <div className="py-5 text-center">
-        <a
-          href="#"
+        {/* 
+        TODO: El link al que refiere la sala debe corresponder con el nombre de esta.
+        Por motivos de prueba, se tiene "/home/sala1"
+        */}
+        <Link
+          href="/home/sala1"
           className="block text-xl font-bold text-gray-800 dark:text-white"
           tabIndex={parseInt("0")}
           role="link"
         >
           {blockNumber}
-        </a>
+        </Link>
         <span className="text-sm text-gray-700 dark:text-gray-200">
           {roomNumber}
         </span>
