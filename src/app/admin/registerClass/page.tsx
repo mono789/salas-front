@@ -1,13 +1,13 @@
 import React from "react";
-import Description from "./description";
 import Form from "./form";
+import RoomDescription from "@/components/description";
 
 const Page = () => {
   return (
     <div>
       <div className="flex justify-center items-start">
         <Form />
-        <Description />
+        <RoomDescription></RoomDescription>
       </div>
     </div>
   );
