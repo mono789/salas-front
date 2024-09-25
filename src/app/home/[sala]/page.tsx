@@ -1,11 +1,10 @@
 import RoomDescription from "@/components/description";
-import { useRouter } from "next/router";
 
 const Page = ({ params }) => {
   const { sala } = params;
 
   return (
-    <div className="flex flex-col md:flex-row p-3">
+    <div className="flex flex-col justify-around place-items-center md:flex-row p-3">
       <RoomDescription
         nombre="Sala 20-234"
         restricciones="No se permite el ingreso de alimentos"
@@ -14,39 +13,48 @@ const Page = ({ params }) => {
         os="Windows 10 / Ubuntu 20.04"
         software="Microsoft Office 2019, Visual Studio Code, Google Chrome, Mozilla Firefox, Zoom, Microsoft Teams, R Studio, Python"
       />
-      <div>
-        <h3>Horario y disponibilidad</h3>
-
+      <div className="flex flex-col place-items-center bg-white dark:bg-gray-800 rounded-lg shadow-lg mt-5 md:ml-5 p-2">
+        <h2 className="font-bold">Horario y Disponibilidad</h2>
         {/* 
         Se maneja un grid para representarlo, las celdas de Horas tienen la mitad de la longitud de las demás.
         Supongo yo que se puede obtener la disponibilidad y relacionar los días con las horas. Para posteriormente juntarlas en una fila
         Este componente de fila debería poder integrarse en el grip sin invonvenientes.
-
         */}
-
-        <div className="grid grid-cols-7 col-span-5 gap-2">
+        <div className="grid grid-cols-7 col-span-5 gap-2 place-items-center">
           <div>Horas</div>
           <div className="col-span-2">Hoy</div>
           <div className="col-span-2">Mañana</div>
           <div className="col-span-2">Seleccionar fecha</div>
           <div>6am</div>
-          <div className="bg-teal-900 col-span-2 text-center rounded-full">
+          <button className="bg-lime-500 dark:bg-teal-900 col-span-2 text-center rounded-full px-2">
+            Libre
+          </button>
+          <button className="bg-orange-500 col-span-2 text-center rounded-full px-2">
+            Ocupado
+          </button>
+          <button className="bg-amber-500 col-span-2 text-center rounded-full px-2">
+            Reservado
+          </button>
+          <div>7am</div>
+          <div className="bg-lime-500 dark:bg-teal-900 col-span-2 text-center rounded-full px-2">
             Libre
           </div>
-          <div className="bg-orange-600 col-span-2 text-center rounded-full">
+          <div className="bg-orange-500 col-span-2 text-center rounded-full px-2">
             Ocupado
           </div>
-          <div className="bg-amber-500 col-span-2 text-center rounded-full">
+          <div className="bg-amber-500 col-span-2 text-center rounded-full px-2">
             Reservado
           </div>
-          <div>7am</div>
-          <div className="bg-teal-900 col-span-2">1</div>
-          <div className="bg-orange-600 col-span-2">2</div>
-          <div className="bg-amber-500 col-span-2">3</div>
           <div>8am</div>
-          <div className="bg-teal-900 col-span-2">1</div>
-          <div className="bg-orange-600 col-span-2">2</div>
-          <div className="bg-amber-500 col-span-2">3</div>
+          <div className="bg-lime-500 dark:bg-teal-900 col-span-2 text-center rounded-full px-2">
+            Libre
+          </div>
+          <div className="bg-orange-500 col-span-2 text-center rounded-full px-2">
+            Ocupado
+          </div>
+          <div className="bg-amber-500 col-span-2 text-center rounded-full px-2">
+            Reservado
+          </div>
         </div>
       </div>
     </div>
