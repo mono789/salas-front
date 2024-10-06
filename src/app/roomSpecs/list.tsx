@@ -4,8 +4,50 @@ import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import searchIcon from "@iconify-icons/mdi/search";
 
+/* TODO: ESTE COMPONENTE NO LO PIENSO UTILIZAR COMO UNA VISTA APARTE.
+MÁS BIEN PUEDE SERVIR PARA ENRIQUECER EL FILTRO DE salasinfo/home
+*/
+
 const List = () => {
   const tools = [
+    // Procesadores
+    "Intel Core i9-11900K",
+    "AMD Ryzen 9 5900X",
+    "Intel Core i7-11700K",
+    "AMD Ryzen 7 5800X",
+
+    // RAM
+    "8GB DDR4 RAM",
+    "16GB DDR4 RAM",
+    "32GB DDR4 RAM",
+
+    // Discos duros y SSDs
+    "1TB SSD",
+    "2TB HDD",
+    "4TB HDD",
+    "1TB SSD",
+
+    // Tarjetas gráficas
+    "NVIDIA GeForce RTX 3080",
+    "AMD Radeon RX 6800 XT",
+    "NVIDIA GeForce RTX 3070",
+    "AMD Radeon RX 6700 XT",
+
+    // Marcas
+    "Apple MacBook Pro",
+    "Dell XPS 13",
+    "HP Spectre x360",
+    "Lenovo ThinkPad",
+
+    // Sistemas operativos
+    "Windows 10 Pro",
+    "Ubuntu 20.04 LTS",
+    "macOS Big Sur",
+    "Fedora 34",
+    "Linux",
+  ];
+
+  const programs = [
     "Visual Studio Code",
     "Android Studio",
     "NetBeans",
@@ -32,8 +74,23 @@ const List = () => {
     "Ubuntu",
   ];
 
+  const implementsList = [
+    "Aire acondicionado",
+    "Video beam",
+    "Tablero",
+    "Marcadores",
+    "Pantallas",
+    "Sillas",
+    "Mesas",
+    "Proyector",
+    "Sonido",
+    "Conexión Wi-Fi",
+    "Cámaras",
+  ];
+
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
 
+  // TODO: Reutilizar(?) para las otras vistas cuando haya que seleccionar de una lista.
   const handleButtonClick = (tool: string) => {
     setSelectedTools(
       (prevSelected) =>
