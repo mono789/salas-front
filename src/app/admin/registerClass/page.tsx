@@ -7,7 +7,7 @@ const Page = () => {
     <div>
       <div className="flex justify-center items-start">
         <Form />
-        <RoomDescription></RoomDescription>
+        <RoomDescription />
       </div>
     </div>
   );
