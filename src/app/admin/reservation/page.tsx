@@ -15,7 +15,14 @@ const Page = () => {
         }}
       >
         <Form />
-        <RoomDescription />
+        <RoomDescription
+          nombre="dummy"
+          restricciones="ninguna"
+          nEquipos="20"
+          implementos="dummy"
+          os="Windows"
+          software="Word"
+        />
       </div>
     </div>
   );
