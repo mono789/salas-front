@@ -20,7 +20,7 @@ const Page = () => {
     useMenuAvanzado(!menuAvanzado);
   };
 
-  const useAddSelectedOptions = (htmlElement) => {
+  const useAddSelectedOptions = (htmlElement: any) => {
     const newList = selectedOptions.slice();
 
     if (newList.includes(htmlElement.target.id)) {
