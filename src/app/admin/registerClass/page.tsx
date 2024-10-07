@@ -1,18 +1,14 @@
 import React from "react";
-import Navbar from "../../student/home/navbar";
-import Footer from "../../student/home/footer";
-import Description from "./description";
 import Form from "./form";
+import RoomDescription from "@/components/description";
 
 const Page = () => {
   return (
     <div>
-      <Navbar />
       <div className="flex justify-center items-start">
         <Form />
-        <Description />
+        <RoomDescription />
       </div>
-      <Footer />
     </div>
   );
 };

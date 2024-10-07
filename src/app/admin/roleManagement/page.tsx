@@ -1,6 +1,5 @@
 import React from "react";
-import Calendar from "./calendar";
-
+import Role from "./role";
 
 const Page = () => {
   return (
@@ -11,12 +10,9 @@ const Page = () => {
           backgroundImage: "url('/assets/bottom.png')",
         }}
       >
-        <h2 className="text-center text-lg mb-4 font-bold">
-          ¡Hola admin! Conoce a detalle el horario de clases de cada sala.
-        </h2>
-        <Calendar />
+        <Role />
       </div>
-
+      
     </div>
   );
 };

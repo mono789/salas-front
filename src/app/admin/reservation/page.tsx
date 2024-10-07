@@ -1,13 +1,13 @@
 import React from "react";
-import Navbar from "../../student/home/navbar";
-import Footer from "../../student/home/footer";
-import Description from "./description";
 import Form from "./form";
+import RoomDescription from "@/components/description";
+
+/* TODO: Esta página puede que tenga más uso en el área de usuario. En las rutas regulares de salasinfo.
+/  Podría tener uso en las rutas de las salas, para generar la reserva de las mismas.*/
 
 const Page = () => {
   return (
     <div>
-      <Navbar />
       <div
         className="bg-cover bg-center py-8 flex justify-center items-start"
         style={{
@@ -15,9 +15,8 @@ const Page = () => {
         }}
       >
         <Form />
-        <Description />
+        <RoomDescription />
       </div>
-      <Footer />
     </div>
   );
 };

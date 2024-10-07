@@ -1,39 +1,15 @@
+import Link from "next/link";
 import React from "react";
 
 const Page = () => {
   return (
-    <div
-      className="flex flex-col items-center justify-center h-screen bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `url(/assets/bottom.png)`,
-      }}
-    >
-      <section className="bg-white dark:bg-gray-900 rounded-lg">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <section className="bg-lime-500 dark:bg-teal-950 bg-opacity-70 rounded-lg shadow-md border border-gray-300">
         <div className="container flex items-center justify-center px-6 mx-auto mt-8 mb-8">
           <form className="w-full max-w-md">
-            <div className="flex justify-center mx-auto">
-              <img
-                className="w-auto h-7 sm:h-8"
-                src="/assets/pc-icon.svg"
-                alt=""
-              />
-            </div>
-
-            <div className="flex items-center justify-center mt-6">
-              <a
-                href="#"
-                className="w-1/3 pb-4 font-medium text-center text-gray-500 capitalize border-b dark:border-gray-400 dark:text-gray-300"
-              >
-                sign in
-              </a>
-
-              <a
-                href="#"
-                className="w-1/3 pb-4 font-medium text-center text-gray-800 capitalize border-b-2 border-blue-500 dark:border-blue-400 dark:text-white"
-              >
-                sign up
-              </a>
-            </div>
+            <h3 className="mt-3 text-xl font-medium text-center text-gray-900 dark:text-gray-200">
+              Registro
+            </h3>
 
             <div className="relative flex items-center mt-8">
               <span className="absolute">
@@ -141,12 +117,12 @@ const Page = () => {
               </button>
 
               <div className="mt-6 text-center ">
-                <a
-                  href="#"
-                  className="text-sm text-blue-500 hover:underline dark:text-blue-400"
+                <Link
+                  href="/"
+                  className="text-sm text-blue-500 hover:underline dark:text-blue-400 font-bold"
                 >
                   ¿Ya tienes una cuenta?
-                </a>
+                </Link>
               </div>
             </div>
           </form>
