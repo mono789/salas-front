@@ -1,6 +1,6 @@
 import RoomDescription from "@/components/description";
 
-const Page = ({ params }) => {
+const Page = ({ params }: any) => {
   const { sala } = params;
 
   return (
