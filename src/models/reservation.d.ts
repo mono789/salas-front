@@ -3,33 +3,32 @@ import { RoomResponse } from "./room";
 
 // Request
 export interface ReservationRequest {
-    id: number;
-    activityName: string;
-    activityDescription: string;
-    startsAt: string;
-    endsAt: string;
-    type: ReservationType;
-    userId: string;
-    roomId: number;
+    activityName?: string;
+    activityDescription?: string;
+    startsAt?: string;
+    endsAt?: string;
+    type?: ReservationType;
+    userId?: string;
+    roomId?: number;
 }
 
 /** startsAt and endsAt have a 'HH:mm' pattern*/
 export interface SessionRequest {
-    day: WeekDay;
+    day?: WeekDay;
     /** format HH:mm*/
-    startsAt: string;
+    startsAt?: string;
     /** format HH:mm*/
-    endsAt: string;
+    endsAt?: string;
 }
 
 export interface ClassReservationRequest {
-    activityName: string;
-    activityDescription: string;
-    sessions: Array<SessionRequest>
-    userId: string;
-    roomId: number;
-    semesterStartsAt: string;
-    semesterEndsAt: string;
+    activityName?: string;
+    activityDescription?: string;
+    sessions?: Array<SessionRequest>
+    userId?: string;
+    roomId?: number;
+    semesterStartsAt?: string;
+    semesterEndsAt?: string;
 }
 
 // Responses

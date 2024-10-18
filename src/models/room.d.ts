@@ -14,13 +14,13 @@ export interface RoomRequest {
 }
 
 // Responses
-export interface RoomResponse  {
+export interface RoomResponse {
     id: number;
     computerAmount: number;
     building: string;
     roomNum: string;
-    roomName: string;
-    subRoom: number;
+    roomName?: string;
+    subRoom?: number;
 }
 
 export interface SpecificRoomResponse {
@@ -28,8 +28,8 @@ export interface SpecificRoomResponse {
     computerAmount: number;
     building: string;
     roomNum: string;
-    roomName: string;
-    subRoom: number;
+    roomName?: string;
+    subRoom?: number;
     software: Array<ApplicationResponse>;
     restrictions: Array<RestrictionResponse>;
     implements: Array<ImplementResponse>;
@@ -42,4 +42,11 @@ export interface RoomScheduleResponse {
     startsAt: string;
     endsAt: string;
     type: ReservationType;
+}
+
+export interface RoomFilter {
+    implement?: string;
+    restriction?: string;
+    software?: string;
+    computerAmount?: number;
 }

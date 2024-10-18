@@ -1,7 +1,7 @@
 "use client";
 
-import { RegisterRequest, RegisterResponse } from "@/models/authentication";
-import { AuthenticationService } from "@/services/authentication.service";
+import { RegisterResponse } from "@/models/authentication";
+import AuthenticationService from "@/services/api/authentication.service";
 import Link from "next/link";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 

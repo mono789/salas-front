@@ -3,8 +3,8 @@ import { Role } from "./enums";
 // Requests
 
 export interface AuthenticationRequest {
-    email: string;
-    password: string;
+    email?: string;
+    password?: string;
 }
 
 export interface RegisterRequest {

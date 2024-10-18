@@ -7,3 +7,6 @@ export interface Methods {
     update: RequestMethod;
     patch: RequestMethod;
 }
+
+export type RequestHeaders = Record<string, string>;
+
