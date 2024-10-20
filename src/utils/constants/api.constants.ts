@@ -11,7 +11,7 @@ export const METHOD: Methods = {
     get: "GET",
     post: "POST",
     delete: "DELETE",
-    update: "UPDATE",
+    put: "UPDATE",
     patch: "PATCH",
 };
 

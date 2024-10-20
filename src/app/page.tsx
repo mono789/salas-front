@@ -1,13 +1,15 @@
 "use client";
 
-import { AuthenticationRequest } from "@/models/authentication";
+import { AuthenticationRequest, AuthenticationResponse } from "@/models/authentication";
 import AuthenticationService from "@/services/api/authentication.service";
 import { LocalStorageService } from "@/services/localstorage/local-storage.service";
 import { LOCAL_USER_KEY } from "@/utils/constants/local-storage.constants";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 
 const Page = () => {
+    const router = useRouter();
     const [loginData, setLoginData] = useState<AuthenticationRequest>({
         email: "",
         password: "",
@@ -24,8 +26,17 @@ const Page = () => {
             .then((response) => {
                 if (response.ok) return response.json();
             })
-            .then((data: AuthenticatorResponse) => {
-                LocalStorageService.saveItem(LOCAL_USER_KEY, data);
+            .then((userData?: AuthenticationResponse) => {
+                if (userData) {
+                    LocalStorageService.saveItem(LOCAL_USER_KEY, userData);
+                    switch(userData.role){
+                        case "ADMIN":
+                        case "USER":
+                        case "PROFESSOR":
+                        case "MONITOR":
+                            router.push("/home")
+                    }
+                }
             });
     }
 

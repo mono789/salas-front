@@ -1,12 +1,13 @@
-import { RequestMethod } from "@/models/enums";
+export type RequestMethod = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
 
 export interface Methods {
     get: RequestMethod;
     post: RequestMethod;
     delete: RequestMethod;
-    update: RequestMethod;
+    put: RequestMethod;
     patch: RequestMethod;
 }
+
 
 export type RequestHeaders = Record<string, string>;
 

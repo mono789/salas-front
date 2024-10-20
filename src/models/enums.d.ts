@@ -11,5 +11,3 @@ export type WeekDay =
     | "THURSDAY"
     | "FRIDAY"
     | "SATURDAY";
-
-export type RequestMethod = "GET" | "POST" | "DELETE" | "UPDATE" | "PATCH";
