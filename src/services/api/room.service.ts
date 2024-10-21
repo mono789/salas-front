@@ -1,6 +1,6 @@
 import { RoomFilter, RoomRequest } from "@/models/room";
 import { METHOD, ROOMS_ENDPOINT } from "@/utils/constants/api.constants";
-import { authorizedHeaders, service } from "./base-service";
+import { authorizedHeaders, service } from "./base.service";
 
 const RoomService = {
   getAll: function ({

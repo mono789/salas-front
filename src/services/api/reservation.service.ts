@@ -1,5 +1,5 @@
 import { METHOD, RESERVATIONS_ENDPOINT } from "@/utils/constants/api.constants";
-import { authorizedHeaders, service } from "./base-service";
+import { authorizedHeaders, service } from "./base.service";
 import {
   ClassReservationRequest,
   ReservationRequest,

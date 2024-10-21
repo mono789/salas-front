@@ -4,9 +4,13 @@ import React from "react";
 
 type RoomDescriptionProps = {
   room?: SpecificRoomResponse;
+  onReservationButtonClick: () => void;
 };
 
-const RoomDescription = ({ room }: RoomDescriptionProps) => {
+const RoomDescription = ({
+  room,
+  onReservationButtonClick,
+}: RoomDescriptionProps) => {
   return (
     <>
       {room ? (
@@ -59,7 +63,10 @@ const RoomDescription = ({ room }: RoomDescriptionProps) => {
               })}
             </div>
             <div className="flex justify-start mt-5 mb-3">
-              <button className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-green-500 rounded-md hover:bg-green-600 focus:outline-none">
+              <button
+                onClick={onReservationButtonClick}
+                className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-green-500 rounded-md hover:bg-green-600 focus:outline-none"
+              >
                 Generar reserva
               </button>
             </div>

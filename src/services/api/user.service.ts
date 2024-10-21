@@ -1,5 +1,5 @@
 import { METHOD, USERS_ENDPOINT } from "@/utils/constants/api.constants";
-import { authorizedHeaders, service } from "./base-service";
+import { authorizedHeaders, service } from "./base.service";
 import { UserRoleRequest } from "@/models/user";
 
 const UserService = {

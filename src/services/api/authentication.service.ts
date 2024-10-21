@@ -2,7 +2,7 @@ import {
     AuthenticationRequest,
     RegisterRequest,
 } from "@/models/authentication";
-import { service } from "./base-service";
+import { service } from "./base.service";
 import {
     AUTHENTICATION_ENDPOINT,
     BASIC_HEADER,
