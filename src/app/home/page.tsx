@@ -1,20 +1,24 @@
 "use client";
 
 import RoomCard from "@/components/RoomCard";
-import React, { useState } from "react";
-
-const roomsData = [
-  { blockNumber: "Bloque 20", roomNumber: "20-331" },
-  { blockNumber: "Bloque 20", roomNumber: "20-335" },
-  { blockNumber: "Bloque 20", roomNumber: "20-335" },
-  { blockNumber: "Bloque 20", roomNumber: "20-335" },
-  { blockNumber: "Bloque 20", roomNumber: "20-335" },
-  { blockNumber: "Bloque 20", roomNumber: "20-335" },
-];
+import { RoomResponse } from "@/models/room";
+import RoomService from "@/services/api/room.service";
+import React, { useEffect, useState } from "react";
 
 const Page = () => {
   const [menuAvanzado, useMenuAvanzado] = useState(false);
   const [selectedOptions, useSelectedOptions] = useState(Array<string>);
+  const [rooms, setRooms] = useState<Array<RoomResponse>>([]);
+
+  useEffect(() => {
+    RoomService.getAll({})
+      .then((response) => {
+        if (response.ok) return response.json();
+      })
+      .then((fetchedRooms?: Array<RoomResponse>) => {
+        if (fetchedRooms) setRooms(fetchedRooms);
+      });
+  }, []);
 
   const useToggleMenuAvanzado = () => {
     useMenuAvanzado(!menuAvanzado);
@@ -105,15 +109,12 @@ const Page = () => {
           <section className="text-gray-600 body-font">
             <div className="container px-5 py-10 lg:py-24 mx-auto">
               <div className="flex flex-wrap -m-4">
-                {roomsData.map((room, index) => (
+                {rooms.map((room) => (
                   <div
-                    key={index}
+                    key={room.id}
                     className="flex justify-center lg:w-1/4 md:w-1/2 p-4 w-full"
                   >
-                    <RoomCard
-                      blockNumber={room.blockNumber}
-                      roomNumber={room.roomNumber}
-                    />
+                    <RoomCard room={room} />
                   </div>
                 ))}
               </div>
