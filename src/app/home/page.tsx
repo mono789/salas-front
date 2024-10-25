@@ -109,7 +109,7 @@ const Page = () => {
           <section className="text-gray-600 body-font">
             <div className="container px-5 py-10 lg:py-24 mx-auto">
               <div className="flex flex-wrap -m-4">
-                {rooms.map((room) => (
+              {rooms.map((room) => (
                   <div
                     key={room.id}
                     className="flex justify-center lg:w-1/4 md:w-1/2 p-4 w-full"

@@ -14,8 +14,7 @@ const RoomService = {
     if (implement) endpoint = `${endpoint}implement=${implement}`;
     if (restriction) endpoint = `${endpoint}&restriction=${restriction}`;
     if (software) endpoint = `${endpoint}&software=${software}`;
-    if (computerAmount)
-      endpoint = `${endpoint}&computerAmount=${computerAmount}`;
+    if (computerAmount) endpoint = `${endpoint}&computerAmount=${computerAmount}`;
     // Make request
     return service(endpoint, METHOD.get, authorizedHeaders());
   },

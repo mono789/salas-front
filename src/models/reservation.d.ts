@@ -10,6 +10,7 @@ export interface ReservationRequest {
     type?: ReservationType;
     userId?: string;
     roomId?: number;
+    day?: string;
 }
 
 /** startsAt and endsAt have a 'HH:mm' pattern*/
