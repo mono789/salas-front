@@ -1,5 +1,7 @@
 "use client";
 import { ReservationRequest } from "@/models/reservation";
+import ReservationService from "@/services/api/reservation.service";
+import { ReservationResponse } from "@/models/reservation";
 import BaseModal from "./BaseModal";
 import { ChangeEvent, FormEvent, useState } from "react";
 import {
@@ -8,19 +10,30 @@ import {
   DEFAULT_RESERVATION_FORM_DATA,
   SUNDAYS_NOT_ALLOWED_MESSAGE,
   UTC_SUNDAY_VALUE,
+  DEFAULT_RESERVATION_TYPES
 } from "@/utils/constants/component.constants";
 import { getDateRightNow } from "@/utils/helpers.utils";
+import {SpecificRoomResponse } from "@/models/room";
+import { LocalStorageService } from "@/services/localstorage/local-storage.service";
+
+interface UserData {
+  id: string;
+  token: string;
+  role: string;
+}
 
 type ReservationModalProps = {
   opened: boolean;
   setOpened: (opened: boolean) => void;
   saveReservation: (reservation: ReservationRequest) => void;
+  room?: SpecificRoomResponse;
 };
 
 function ReservationModal({
   opened,
   setOpened,
   saveReservation,
+  room,
 }: ReservationModalProps) {
   // States
   const [reservation, setReservation] = useState<ReservationRequest>(
@@ -29,7 +42,7 @@ function ReservationModal({
   const [endsAtOptions, setEndsAtOptions] = useState<Array<string>>(
     DEFAULT_RESERVATION_END_HOURS,
   );
-
+  const userData: UserData | undefined = LocalStorageService.getItem('user') as UserData | undefined;
   // Form handle data
   function handleChangeInput(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
@@ -49,7 +62,11 @@ function ReservationModal({
 
   function handleChangeSelect(event: ChangeEvent<HTMLSelectElement>) {
     const { id, value } = event.target;
-    console.log(id, value);
+    console.log(`Cambiando ${id} a ${value}`);
+    setReservation((prevReservation) => ({
+      ...prevReservation,
+      [id]: value,
+    }));
   }
 
   function handleCloseClick() {
@@ -58,6 +75,15 @@ function ReservationModal({
 
   function handleOnFormSumbit(event: FormEvent) {
     event.preventDefault();
+    reservation.roomId = room?.id;
+    reservation.userId= userData?.id;
+    reservation.type = DEFAULT_RESERVATION_TYPES[0];
+    reservation.startsAt= reservation.day+' '+ reservation.startsAt;
+    reservation.endsAt= reservation.day+' '+ reservation.endsAt;
+    console.log("RESERVATION: ",reservation);
+    ReservationService.save(reservation).then((response) => {
+      if (response.ok) return response.json();
+  });
     saveReservation(reservation);
   }
 

@@ -48,9 +48,8 @@ const Page = () => {
       <ReservationModal
         opened={openReservationModal}
         setOpened={setOpenReservationModal}
-        saveReservation={(res) => {
-          console.log(res);
-        }}
+        saveReservation={(res) => {}}
+        room={room}
       ></ReservationModal>
       <div className="flex flex-col place-items-center bg-white dark:bg-gray-800 rounded-lg shadow-lg mt-5 md:ml-5 p-2">
         {schedule ? (
