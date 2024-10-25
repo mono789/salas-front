@@ -5,6 +5,7 @@ import { RoomResponse } from "./room";
 export interface ReservationRequest {
     activityName?: string;
     activityDescription?: string;
+    date?: string;
     startsAt?: string;
     endsAt?: string;
     type?: ReservationType;
