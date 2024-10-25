@@ -1,6 +1,6 @@
 import { RoomResponse } from "@/models/room";
 import { BUILDING_TEXT } from "@/utils/constants/component.constants";
-import { mapRoomName } from "@/utils/map.utils";
+import { mapRoomName } from "@/utils/helpers.utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -9,7 +9,7 @@ interface RoomProps {
   room: RoomResponse;
 }
 
-const ROOM_PATH = "/home/room/";
+const ROOM_PATH = "/home/room?id=";
 
 const RoomCard: React.FC<RoomProps> = ({ room }) => {
   const router = useRouter();

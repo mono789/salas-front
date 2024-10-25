@@ -1,5 +1,5 @@
 import { SpecificRoomResponse } from "@/models/room";
-import { mapRoomName } from "@/utils/map.utils";
+import { mapRoomName } from "@/utils/helpers.utils";
 import React from "react";
 
 type RoomDescriptionProps = {

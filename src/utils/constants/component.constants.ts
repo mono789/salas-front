@@ -35,8 +35,10 @@ export const DEFAULT_HOURS = [
   "21:00",
   "22:00",
 ];
-
+export const DEFAULT_RESERVATION_END_HOURS = [];
 export const DEFAULT_RESERVATION_TYPES: Array<ReservationType> = [
   "ONCE",
   "WEEKLY",
 ];
+export const UTC_SUNDAY_VALUE = 0;
+export const SUNDAYS_NOT_ALLOWED_MESSAGE = "Los Domingos no se puede reservar";

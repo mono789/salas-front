@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/salasinfo',
-  distDir: 'dist',
-  images: {unoptimized:true}
-}
+  basePath: "/salasinfo",
+  output: "export",
+  distDir: "dist",
+  images: { unoptimized: true },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

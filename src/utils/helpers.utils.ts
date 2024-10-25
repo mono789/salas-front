@@ -7,3 +7,7 @@ export function mapRoomName(room: RoomResponse): string {
   if (room.subRoom) roomNum = `${roomNum} ${ROOM_TEXT} ${room.subRoom}`;
   return roomNum;
 }
+
+export function getDateRightNow(): string {
+  return new Date(Date.now()).toISOString().split("T")[0];
+}
