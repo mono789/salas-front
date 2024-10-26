@@ -5,6 +5,7 @@ import Management from "./management";
 import ReservationService from "@/services/api/reservation.service";
 import { ReservationResponse } from "@/models/reservation";
 import ReservationRow from "./reservationRow";
+import Table from "@/components/table";
 
 const Page = () => {
   const [reservations, setReservations] = useState<Array<ReservationResponse>>(
@@ -25,6 +26,18 @@ const Page = () => {
 
   console.log(reservations);
 
+  const tableHeaders = [
+    "Sala",
+    "Actividad",
+    "Descripcion",
+    "Estado",
+    "Fecha",
+    "Hora inicio",
+    "Hora fin",
+    "Usuario",
+    "Acciones",
+  ];
+
   return (
     <div
       className="bg-cover bg-center py-8 px-4"
@@ -32,16 +45,7 @@ const Page = () => {
         backgroundImage: "url('/assets/bottom.png')",
       }}
     >
-      <div className="grid grid-cols-9 justify-items-center items-center bg-gray-50 dark:bg-gray-800 border">
-        <div>Sala</div>
-        <div>Actividad</div>
-        <div>Descripcion</div>
-        <div>Estado</div>
-        <div>Fecha</div>
-        <div>Hora inicio</div>
-        <div>Hora fin</div>
-        <div>Usuario</div>
-        <div>Acciones</div>
+      <Table tableHeaders={tableHeaders}>
         <ReservationRow
           id={1}
           sala="20-234"
@@ -53,6 +57,7 @@ const Page = () => {
           endTime="3pm"
           user="Dummy acevedo"
         />
+
         <ReservationRow
           id={2}
           sala="20-238"
@@ -64,7 +69,7 @@ const Page = () => {
           endTime="8pm"
           user="Dummy Santamaria"
         />
-      </div>
+      </Table>
 
       <Management />
     </div>
