@@ -1,15 +1,21 @@
 import { SpecificRoomResponse } from "@/models/room";
 import { mapRoomName } from "@/utils/map.utils";
 import React from "react";
+import { UserResponse } from "@/models/user";
+
 
 type RoomDescriptionProps = {
   room?: SpecificRoomResponse;
   onReservationButtonClick: () => void;
+  userData?: UserResponse; 
+  onRegisterClassButtonClick?: () => void;
 };
 
 const RoomDescription = ({
   room,
   onReservationButtonClick,
+  userData,
+  onRegisterClassButtonClick
 }: RoomDescriptionProps) => {
   return (
     <>
@@ -69,6 +75,14 @@ const RoomDescription = ({
               >
                 Generar reserva
               </button>
+              {userData?.role.roleName === "ADMIN" && (
+              <button
+                onClick={onRegisterClassButtonClick}
+                className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
+              >
+                Registrar clase
+              </button>
+              )}
             </div>
           </div>
         </div>
@@ -78,5 +92,4 @@ const RoomDescription = ({
     </>
   );
 };
-
 export default RoomDescription;
