@@ -1,0 +1,28 @@
+stages:
+  - install
+  - build
+  - test
+  - quality
+  - deploy
+
+variables:
+  INFRA_PRD : 'on-premise'
+  INFRA_DEV : 'on-premise'
+
+cache:
+  paths:
+    - node_modules
+    - .sonar/cache
+  key: "$CI_BUILD_REF_NAME"
+
+Test Sonarqube:
+   dependencies: []
+
+include:
+  - project: 'io/devops/ci-cd-templates'
+    file:    
+      - 'workflow.yml'
+      - '/jobs/npm_install.yml'      
+      - '/jobs/npm_build.yml'          
+      - '/jobs/sonar.yml'               
+      - '/jobs/deploy_frontend.yml'
