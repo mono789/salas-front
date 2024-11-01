@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Management from "./management";
 import ReservationService from "@/services/api/reservation.service";
 import { ReservationResponse } from "@/models/reservation";
 import ReservationRow from "./reservationRow";
@@ -23,8 +22,6 @@ const Page = () => {
         if (fetchedReservations) setReservations(fetchedReservations);
       });
   }, []);
-
-  console.log(reservations);
 
   const tableHeaders = [
     "Sala",
@@ -51,27 +48,29 @@ const Page = () => {
           sala="20-234"
           activity="clase"
           description="practica de análisis 2"
-          status="pendiente"
+          status="Pendiente"
           date="Octubre 28"
           startTime="10am"
           endTime="3pm"
           user="Dummy acevedo"
         />
-
-        <ReservationRow
-          id={2}
-          sala="20-238"
-          activity="seminario"
-          description="esas cosas del jefe de sistemas"
-          status="aprobada"
-          date="Octubre 30"
-          startTime="6pm"
-          endTime="8pm"
-          user="Dummy Santamaria"
-        />
+        {reservations.map((reservation) => (
+          <ReservationRow
+            key={reservation.id}
+            id={reservation.id}
+            sala={reservation.room.roomNum}
+            activity={reservation.activityName}
+            description={reservation.activityDescription}
+            status={reservation.reservationState.state}
+            date={reservation.startsAt}
+            startTime={reservation.startsAt}
+            endTime={reservation.endsAt}
+            user={reservation.user.email}
+          />
+        ))}
       </Table>
 
-      <Management />
+      {/*<Management />*/}
     </div>
   );
 };
