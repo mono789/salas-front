@@ -6,7 +6,6 @@ import Page from '../home/page';
 const AdminPage = () => {
   return (
     <div>
-      <h1>Panel de Administración</h1>
       <Page/>
     </div>
   );

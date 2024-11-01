@@ -25,28 +25,35 @@ const Page = () => {
         let softwareFilterValue = '';
         if (selectedSoftware.length > 0 || softwareFilter.trim()) {
           const filters = [...selectedSoftware];
-          if (softwareFilter.trim()) filters.push(softwareFilter);
+          if (softwareFilter.trim()) {
+            // Asegurarse de que el filtro por palabra clave se incluya correctamente
+            filters.push(softwareFilter.trim());
+          }
           softwareFilterValue = filters.join(',');
         }
   
         // Definir filtros base
-        const filters = {
+        const baseFilters = {
           implement: selectedImplements.length ? selectedImplements.join(",") : undefined,
           software: softwareFilterValue || undefined,
         };
   
-        // Si se seleccionó fecha y hora, usa getFreeRoom, de lo contrario, usa getAll
-        let response;
+        // Obtener todas las salas que cumplan con los filtros de software e implementos
+        const allRoomsResponse = await RoomService.getAll(baseFilters);
+        let filteredRooms: Array<RoomResponse> = await allRoomsResponse.json();
+  
+        // Si hay fecha y hora seleccionadas, filtrar adicionalmente por disponibilidad
         if (selectedDate && selectedTime) {
-          // Llama a getFreeRoom con la fecha seleccionada
           const dateTimeFilter = `${selectedDate}T${selectedTime}`;
-          response = await RoomService.getFreeRoom(dateTimeFilter);
-        } else {
-          response = await RoomService.getAll(filters);
+          const freeRoomsResponse = await RoomService.getFreeRoom(dateTimeFilter);
+          const freeRooms: Array<RoomResponse> = await freeRoomsResponse.json();
+          
+          // Obtener solo las salas que están tanto en freeRooms como en filteredRooms
+          const freeRoomIds = new Set(freeRooms.map(room => room.id));
+          filteredRooms = filteredRooms.filter(room => freeRoomIds.has(room.id));
         }
   
-        const fetchedRooms: Array<RoomResponse> = await response.json();
-        setRooms(fetchedRooms);
+        setRooms(filteredRooms);
       } catch (error) {
         console.error("Error al obtener las salas:", error);
       }
@@ -100,9 +107,9 @@ const Page = () => {
 
           {/* Contenido principal - Grid de habitaciones */}
           <div className="flex-1">
-          <div className="text-gray-700 dark:text-gray-300 text-center mb-6 p-4 text-xl font-semibold rounded-lg shadow-lg bg-gray-200 dark:bg-gray-800">
-  ¡Bienvenido! Encuentra la sala que mejor se adapte a tus necesidades y disponibilidad.
-</div>
+          <div className="text-gray-700 dark:text-gray-300 text-center mb-6 p-4 text-xl font-semibold rounded-lg bg-white dark:bg-gray-800">
+            ¡Bienvenido! Encuentra la sala que mejor se adapte a tus necesidades y disponibilidad.
+          </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {Array.isArray(rooms) && rooms.map((room) => (
               <div key={room.id} className="flex justify-center">
