@@ -128,14 +128,11 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
 
   };
   
-
-
-
   return (
     <>
       <BaseModal open={opened}>
-      <div className="bg-gray-100 p-6 overflow-y-auto max-h-85">
-            <h2 className="text-gray-900 text-xl font-semibold title-font mb-5">
+      <div className="bg-gray-100 dark:bg-gray-800 p-6 overflow-y-auto max-h-85">
+        <h2 className="text-gray-900 dark:text-gray-100 text-xl font-semibold title-font mb-5 text-center">
               Gestión de horarios de clase
             </h2>
             <div className="relative mb-4">
@@ -188,7 +185,7 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
               <select
                 id="day"
                 value={day || ""}
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md"
+                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={(e) => setDay(e.target.value as WeekDay)}>
                 <option value="" disabled>
                     Selecciona un día
@@ -228,7 +225,7 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
                 style={{ maxHeight: '150px', overflowY: 'auto' }} 
               >
                 <option value="" disabled>
-                  Fin
+                  Selecciona una hora de fin
                 </option>
                 {DEFAULT_HOURS.slice(0, -1).map((hour, index) => (
                   <option key={index} value={hour}>
@@ -275,7 +272,7 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
               </tbody>
             </table>
             </div>
-            <div className="flex justify-center gap-4 mt-6"> {/* Cambia gap a justify-between para más espacio */}
+            <div className="flex justify-center gap-4 mt-6">
               <button
                 className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none"
                 onClick={handleAddClass}

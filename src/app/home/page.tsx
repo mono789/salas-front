@@ -19,32 +19,42 @@ const Page = () => {
   const [showImplementSection, setShowImplementSection] = useState(true);
 
   useEffect(() => {
-
     const fetchRooms = async () => {
-  try {
-    // Filtrar por software en palabra clave y en checkboxes
-    let softwareFilterValue = '';
-    if (selectedSoftware.length > 0 || softwareFilter.trim()) {
-      const filters = [...selectedSoftware];
-      if (softwareFilter.trim()) filters.push(softwareFilter);
-      softwareFilterValue = filters.join(',');
-    }
-
-    const filters = {
-      implement: selectedImplements.length ? selectedImplements.join(",") : undefined,
-      software: softwareFilterValue || undefined,
+      try {
+        // Filtrar por software en palabra clave y en checkboxes
+        let softwareFilterValue = '';
+        if (selectedSoftware.length > 0 || softwareFilter.trim()) {
+          const filters = [...selectedSoftware];
+          if (softwareFilter.trim()) filters.push(softwareFilter);
+          softwareFilterValue = filters.join(',');
+        }
+  
+        // Definir filtros base
+        const filters = {
+          implement: selectedImplements.length ? selectedImplements.join(",") : undefined,
+          software: softwareFilterValue || undefined,
+        };
+  
+        // Si se seleccionó fecha y hora, usa getFreeRoom, de lo contrario, usa getAll
+        let response;
+        if (selectedDate && selectedTime) {
+          // Llama a getFreeRoom con la fecha seleccionada
+          const dateTimeFilter = `${selectedDate}T${selectedTime}`;
+          response = await RoomService.getFreeRoom(dateTimeFilter);
+        } else {
+          response = await RoomService.getAll(filters);
+        }
+  
+        const fetchedRooms: Array<RoomResponse> = await response.json();
+        setRooms(fetchedRooms);
+      } catch (error) {
+        console.error("Error al obtener las salas:", error);
+      }
     };
-
-    const response = await RoomService.getAll(filters);
-    const fetchedRooms: Array<RoomResponse> = await response.json();
-    setRooms(fetchedRooms);
-  } catch (error) {
-    console.error("Error al obtener las salas:", error);
-  }
-};
-    
+  
     fetchRooms();
   }, [softwareFilter, selectedDate, selectedTime, selectedImplements, selectedSoftware]);
+  
 
   const handleSoftwareChange = (event: React.ChangeEvent<HTMLInputElement>) => setSoftwareFilter(event.target.value);
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => setSelectedDate(event.target.value);
@@ -68,6 +78,7 @@ const Page = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Sidebar de filtros */}
           <div className="w-full md:w-64 flex-shrink-0">
+            
             <Filters
               softwareFilter={softwareFilter}
               selectedDate={selectedDate}
@@ -89,11 +100,14 @@ const Page = () => {
 
           {/* Contenido principal - Grid de habitaciones */}
           <div className="flex-1">
+          <div className="text-gray-700 dark:text-gray-300 text-center mb-6 p-4 text-xl font-semibold rounded-lg shadow-lg bg-gray-200 dark:bg-gray-800">
+  ¡Bienvenido! Encuentra la sala que mejor se adapte a tus necesidades y disponibilidad.
+</div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-              {rooms.map((room) => (
-                <div key={room.id} className="flex justify-center">
-                  <RoomCard room={room} />
-                </div>
+            {Array.isArray(rooms) && rooms.map((room) => (
+              <div key={room.id} className="flex justify-center">
+                <RoomCard room={room} />
+              </div>
               ))}
             </div>
           </div>

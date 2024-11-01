@@ -109,46 +109,57 @@ function ReservationModal({ opened, setOpened, room, userData }: ReservationModa
   return (
     <>
       <BaseModal open={opened}>
-        <form onSubmit={handleOnFormSubmit}>
-          <h3 className="mt-2 text-xl font-semibold text-gray-800 dark:text-white md:mt-0">
+        <form onSubmit={handleOnFormSubmit} className="p-4">
+          <h3 className="mb-4 text-xl font-semibold text-gray-800 dark:text-white text-center">
             Nueva Reserva
           </h3>
 
           {error && <p className="text-red-500 mb-4">{error}</p>}
 
-          <label htmlFor="activityName">Actividad</label>
-          <input
-            id="activityName"
-            className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
-            placeholder="Nombre de la actividad"
-            onChange={handleChangeInput}
-          />
+          <div className="mb-4">
+            <label htmlFor="activityName" className="block mb-1 font-medium">
+              Actividad
+            </label>
+            <input
+              id="activityName"
+              className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+              placeholder="Nombre de la actividad"
+              onChange={handleChangeInput}
+            />
+          </div>
 
-          <label htmlFor="activityDescription">Descripción</label>
-          <input
-            id="activityDescription"
-            className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
-            placeholder="Descripción"
-            onChange={handleChangeInput}
-          />
+          <div className="mb-4">
+            <label htmlFor="activityDescription" className="block mb-1 font-medium">
+              Descripción
+            </label>
+            <input
+              id="activityDescription"
+              className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+              placeholder="Descripción"
+              onChange={handleChangeInput}
+            />
+          </div>
 
-          {/* Nueva sección para Día, Hora de Inicio y Hora de Término en una sola fila */}
-          <div className="grid grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-3 gap-4 mb-6">
             <div>
-              <label htmlFor="day">Día</label>
+              <label htmlFor="day" className="block mb-1 font-medium">
+                Día
+              </label>
               <input
                 id="day"
                 type="date"
-                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+                className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={handleChangeInput}
               />
             </div>
 
             <div>
-              <label htmlFor="startsAt">Hora inicio</label>
+              <label htmlFor="startsAt" className="block mb-1 font-medium">
+                Hora inicio
+              </label>
               <select
                 id="startsAt"
-                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+                className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={handleChangeSelect}
                 value={reservation.startsAt || ""}
               >
@@ -164,10 +175,12 @@ function ReservationModal({ opened, setOpened, room, userData }: ReservationModa
             </div>
 
             <div>
-              <label htmlFor="endsAt">Hora fin</label>
+              <label htmlFor="endsAt" className="block mb-1 font-medium">
+                Hora fin
+              </label>
               <select
                 id="endsAt"
-                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+                className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={handleChangeSelect}
                 value={reservation.endsAt || ""}
               >
@@ -182,14 +195,14 @@ function ReservationModal({ opened, setOpened, room, userData }: ReservationModa
               </select>
             </div>
           </div>
-          {/* Contenedor para centrar los botones */}
-          <div className="flex justify-center gap-4 mt-6">
-            <button type="submit" className="px-8 py-2.5 text-white bg-green-500 rounded-md hover:bg-green-600">
+
+          <div className="flex justify-center gap-4">
+            <button type="submit" className="px-8 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 font-medium">
               Guardar reserva
             </button>
             <button
               type="button"
-              className="px-8 py-2.5 text-white bg-red-500 rounded-md hover:bg-red-600"
+              className="px-8 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 font-medium"
               onClick={handleCloseClick}
             >
               Cerrar
