@@ -8,10 +8,12 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import {
   DEFAULT_HOURS,
   DEFAULT_RESERVATION_FORM_DATA,
-  DEFAULT_RESERVATION_TYPES
+  DEFAULT_RESERVATION_TYPES,
 } from "@/utils/constants/component.constants";
-import {SpecificRoomResponse } from "@/models/room";
+import { SpecificRoomResponse } from "@/models/room";
 import { LocalStorageService } from "@/services/localstorage/local-storage.service";
+import { UserResponse } from "@/models/user";
+import { useRouter } from "next/router";
 
 interface UserData {
   id: string;
@@ -24,6 +26,7 @@ type ReservationModalProps = {
   setOpened: (opened: boolean) => void;
   saveReservation: (reservation: ReservationRequest) => void;
   room?: SpecificRoomResponse;
+  userData?: UserResponse;
 };
 
 function ReservationModal({
@@ -32,10 +35,17 @@ function ReservationModal({
   saveReservation,
   room,
 }: ReservationModalProps) {
+  //const router = useRouter();
   const [reservation, setReservation] = useState<ReservationRequest>(
-    DEFAULT_RESERVATION_FORM_DATA,
+    DEFAULT_RESERVATION_FORM_DATA
   );
-  const userData: UserData | undefined = LocalStorageService.getItem('user') as UserData | undefined;
+  const [error, setError] = useState<string>(" ");
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [createdReservation, setCreatedReservation] =
+    useState<ReservationResponse | null>(null);
+  const userData: UserData | undefined = LocalStorageService.getItem("user") as
+    | UserData
+    | undefined;
   function handleChangeInput(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
     setReservation({ ...reservation, [id]: value });
@@ -57,15 +67,24 @@ function ReservationModal({
   function handleOnFormSubmit(event: FormEvent) {
     event.preventDefault();
     reservation.roomId = room?.id;
-    reservation.userId= userData?.id;
+    reservation.userId = userData?.id;
     reservation.type = DEFAULT_RESERVATION_TYPES[0];
-    reservation.startsAt= reservation.day+' '+ reservation.startsAt;
-    reservation.endsAt= reservation.day+' '+ reservation.endsAt;
-    console.log("RESERVATION: ",reservation);
+    reservation.startsAt = reservation.day + " " + reservation.startsAt;
+    reservation.endsAt = reservation.day + " " + reservation.endsAt;
+    console.log("RESERVATION: ", reservation);
     ReservationService.save(reservation).then((response) => {
       if (response.ok) return response.json();
-  });
+    });
     saveReservation(reservation);
+  }
+
+  function handleFinishClick() {
+    /*
+    
+    if (userData?.role.roleName) {
+      const path = userData?.role.roleName === "ADMIN" ? "/admin" : "/home";
+      router.push();
+    }*/
   }
 
   return (
@@ -79,29 +98,32 @@ function ReservationModal({
           {error && <p className="text-red-500 mb-4">{error}</p>}
 
           <div className="mb-4">
-          <label htmlFor="activityName" className="block mb-1 font-medium">
+            <label htmlFor="activityName" className="block mb-1 font-medium">
               Actividad
             </label>
-          <input
-            id="activityName"
-            className="block w-full px-4 py-2 placeholder-gray-400  backdrop-blur-lg border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-            placeholder="Nombre de la actividad"
-            aria-label="Activity Name"
-          onChange={handleChangeInput}
-          />
+            <input
+              id="activityName"
+              className="block w-full px-4 py-2 placeholder-gray-400  backdrop-blur-lg border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Nombre de la actividad"
+              aria-label="Activity Name"
+              onChange={handleChangeInput}
+            />
           </div>
 
           <div className="mb-4">
-          <label htmlFor="activityDescription" className="block mb-1 font-medium">
+            <label
+              htmlFor="activityDescription"
+              className="block mb-1 font-medium"
+            >
               Descripción
             </label>
-          <input
-            id="activityDescription"
-            className="block w-full px-4 py-2 placeholder-gray-400  backdrop-blur-lg border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-            placeholder="Descripción"
-            aria-label="Description"
-          onChange={handleChangeInput}
-          />
+            <input
+              id="activityDescription"
+              className="block w-full px-4 py-2 placeholder-gray-400  backdrop-blur-lg border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Descripción"
+              aria-label="Description"
+              onChange={handleChangeInput}
+            />
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-6">
@@ -161,7 +183,10 @@ function ReservationModal({
           </div>
 
           <div className="flex justify-center gap-4">
-            <button type="submit" className="px-8 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 font-medium">
+            <button
+              type="submit"
+              className="px-8 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 font-medium"
+            >
               Guardar reserva
             </button>
             <button
@@ -175,56 +200,58 @@ function ReservationModal({
         </form>
       </BaseModal>
 
-
       {showConfirmationModal && createdReservation && (
-  <BaseModal open={showConfirmationModal}>
-    <h3 className="mt-2 text-xl font-semibold text-center text-gray-800 dark:text-white md:mt-0">
-      RESERVA GENERADA
-    </h3>
-    <hr className="my-2" />
-    <div className="text-center">
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Estado reserva:</h2>
-        <p>{createdReservation.reservationState.state}</p>
-      </div>
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Actividad:</h2>
-        <p>{createdReservation.activityName}</p>
-      </div>
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Descripción:</h2>
-        <p>{createdReservation.activityDescription}</p>
-      </div>
-      <hr className="my-2" />
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Inicio:</h2>
-        <p>{createdReservation.startsAt}</p>
-      </div>
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Fin:</h2>
-        <p>{createdReservation.endsAt}</p>
-      </div>
-      <hr className="my-2" />
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Sala:</h2>
-        <p>
-          {'Bloque ' +
-            `${room?.building ? room.building + '-' : ''}${room?.roomNum ?? ''}${
-              room?.subRoom && room.subRoom !== 0 ? ' Subsala ' + room.subRoom : ''
-            }${room?.roomName ? ' ' + room.roomName : ''}`}
-        </p>
-      </div>
-      <hr className="my-2" />
-      <button
-      className="px-8 py-2.5 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600"
-      onClick={handleFinishClick}
-    >
-      Finalizar
-    </button>
-    </div>
-    
-  </BaseModal>
-)}
+        <BaseModal open={showConfirmationModal}>
+          <h3 className="mt-2 text-xl font-semibold text-center text-gray-800 dark:text-white md:mt-0">
+            RESERVA GENERADA
+          </h3>
+          <hr className="my-2" />
+          <div className="text-center">
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Estado reserva:</h2>
+              <p>{createdReservation.reservationState.state}</p>
+            </div>
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Actividad:</h2>
+              <p>{createdReservation.activityName}</p>
+            </div>
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Descripción:</h2>
+              <p>{createdReservation.activityDescription}</p>
+            </div>
+            <hr className="my-2" />
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Inicio:</h2>
+              <p>{createdReservation.startsAt}</p>
+            </div>
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Fin:</h2>
+              <p>{createdReservation.endsAt}</p>
+            </div>
+            <hr className="my-2" />
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Sala:</h2>
+              <p>
+                {"Bloque " +
+                  `${room?.building ? room.building + "-" : ""}${
+                    room?.roomNum ?? ""
+                  }${
+                    room?.subRoom && room.subRoom !== 0
+                      ? " Subsala " + room.subRoom
+                      : ""
+                  }${room?.roomName ? " " + room.roomName : ""}`}
+              </p>
+            </div>
+            <hr className="my-2" />
+            <button
+              className="px-8 py-2.5 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600"
+              onClick={handleFinishClick}
+            >
+              Finalizar
+            </button>
+          </div>
+        </BaseModal>
+      )}
     </>
   );
 }
