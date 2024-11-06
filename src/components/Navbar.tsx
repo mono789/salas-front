@@ -1,9 +1,7 @@
-
 import React from "react";
 import Image from "next/image";
 
 const Navbar = () => {
-  
   return (
     <div>
       <nav
@@ -12,16 +10,18 @@ const Navbar = () => {
       >
         <div className="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center md:-mx-1">
           <div className="flex items-center justify-between">
-            <a href="#">
+            <a href="/salasinfo/home">
               {/*Logo DRAI*/}
               <Image
                 src="https://arquimedes.udea.edu.co/drai.png"
                 alt="logo DRAI"
-                width={106}/* Para conservar un aspect ratio de aproximadamente 16:9*/
+                width={
+                  106
+                } /* Para conservar un aspect ratio de aproximadamente 16:9*/
                 height={60}
               />
             </a>
-            
+
             <div className="flex lg:hidden">
               <button
                 x-cloak="true"
@@ -62,9 +62,6 @@ const Navbar = () => {
                 </svg>
               </button>
             </div>
-
-            
-
           </div>
         </div>
       </nav>

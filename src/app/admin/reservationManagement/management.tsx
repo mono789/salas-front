@@ -46,17 +46,6 @@ const List = () => {
           "https://images.unsplash.com/photo-1506863530036-1efeddceb993?ixlib=rb-4.0.3",
       },
     },
-    {
-      room: "20-335",
-      status: "pendiente",
-      date: "Julio 1, 2024",
-      user: {
-        name: "Orlando Diggs",
-        email: "orlando@example.com",
-        avatar:
-          "https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-4.0.3",
-      },
-    },
   ];
 
   return (
@@ -238,31 +227,13 @@ const List = () => {
               href="#"
               className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
             >
-              3
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
               ...
             </a>
             <a
               href="#"
               className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
             >
-              12
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              13
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              14
+              5
             </a>
           </div>
 
