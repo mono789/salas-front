@@ -1,15 +1,21 @@
 import { SpecificRoomResponse } from "@/models/room";
 import { mapRoomName } from "@/utils/helpers.utils";
 import React from "react";
+import { UserResponse } from "@/models/user";
+
 
 type RoomDescriptionProps = {
   room?: SpecificRoomResponse;
   onReservationButtonClick: () => void;
+  userData?: UserResponse; 
+  onRegisterClassButtonClick?: () => void;
 };
 
 const RoomDescription = ({
   room,
   onReservationButtonClick,
+  userData,
+  onRegisterClassButtonClick
 }: RoomDescriptionProps) => {
   return (
     <>
@@ -62,13 +68,21 @@ const RoomDescription = ({
                 );
               })}
             </div>
-            <div className="flex justify-start mt-5 mb-3">
+            <div className="flex justify-start gap-4 mt-5 mb-3">
               <button
                 onClick={onReservationButtonClick}
                 className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-green-500 rounded-md hover:bg-green-600 focus:outline-none"
               >
                 Generar reserva
               </button>
+              {userData?.role.roleName === "ADMIN" && (
+                <button
+                  onClick={onRegisterClassButtonClick}
+                  className="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none"
+                >
+                  Registrar clase
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -78,5 +92,4 @@ const RoomDescription = ({
     </>
   );
 };
-
 export default RoomDescription;
