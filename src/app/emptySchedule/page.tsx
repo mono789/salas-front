@@ -17,7 +17,9 @@ const Page = () => {
           necesidades para ver a detalle la sala que esté libre.
         </h2>
         <div className="w-11/12 sm:w-10/12 md:w-9/12 lg:w-8/12 xl:w-7/12 px-4">
-          <Table />
+          {/*
+          Alterar para que funcione con el nuevo componente Table
+          <Table />*/}
         </div>
       </div>
     </div>
