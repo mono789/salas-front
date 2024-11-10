@@ -13,10 +13,10 @@ const Page = () => {
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedSoftware, setSelectedSoftware] = useState<string[]>([]);
   const [selectedImplements, setSelectedImplements] = useState<string[]>([]);
-  const [showKeywordSection, setShowKeywordSection] = useState(true);
-  const [showDateSection, setShowDateSection] = useState(true);
-  const [showSoftwareSection, setShowSoftwareSection] = useState(true);
-  const [showImplementSection, setShowImplementSection] = useState(true);
+  const [showKeywordSection, setShowKeywordSection] = useState(false);
+  const [showDateSection, setShowDateSection] = useState(false);
+  const [showSoftwareSection, setShowSoftwareSection] = useState(false);
+  const [showImplementSection, setShowImplementSection] = useState(false);
 
   useEffect(() => {
     const fetchRooms = async () => {

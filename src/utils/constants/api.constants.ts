@@ -9,6 +9,8 @@ export const AUTHENTICATION_ENDPOINT = "/auth";
 export const USERS_ENDPOINT = "/users";
 export const ROOMS_ENDPOINT = "/rooms";
 export const RESERVATIONS_ENDPOINT = "/reservations";
+export const APPLICATIONS_ENDPOINT = "/applications";
+export const IMPLEMENTS_ENDPOINT = "/implements";
 
 export const METHOD: Methods = {
     get: "GET",

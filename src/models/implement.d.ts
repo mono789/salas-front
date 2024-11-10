@@ -1,5 +1,13 @@
 export interface ImplementResponse {
     id: number;
     name: string;
-    state: string;
 }
+
+export interface ImplementRequest {
+    name: string;
+  }
+
+export interface ImplementFilter {
+    name?: string;
+  }
+
