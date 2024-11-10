@@ -1,7 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 
-const Table = () => {
+interface TableComponentProps {
+  children: ReactNode;
+  tableHeaders: Array<string>;
+}
+
+const Table: React.FC<TableComponentProps> = ({ children, tableHeaders }) => {
   const [selectedButton, setSelectedButton] = useState<{
     dayIndex: number;
     hourIndex: number;
@@ -40,6 +45,17 @@ const Table = () => {
   };
 
   return (
+    <div
+      className={`grid grid-cols-${tableHeaders.length} justify-items-center items-center bg-gray-50 dark:bg-gray-800 border`}
+    >
+      {tableHeaders.map((headerName) => (
+        <div key={headerName}>{headerName}</div>
+      ))}
+      {children}
+    </div>
+  );
+
+  /*(
     <div className="flex justify-center items-center">
       <section className="container px-4 mx-auto">
         <div className="flex flex-col mt-6 mb-6">
@@ -114,7 +130,7 @@ const Table = () => {
         </div>
       </section>
     </div>
-  );
+  );*/
 };
 
 export default Table;

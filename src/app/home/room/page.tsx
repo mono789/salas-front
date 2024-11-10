@@ -5,13 +5,16 @@ import RegisterClassModal from "@/components/modals/RegisterClassModal";
 
 import { RoomScheduleResponse, SpecificRoomResponse } from "@/models/room";
 import RoomService from "@/services/api/room.service";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LocalStorageService } from "@/services/localstorage/local-storage.service";
 import UserService from "@/services/api/user.service";
 import { UserResponse } from "@/models/user";
 
-const Page = ({ params }: any) => {
-  const { sala } = params;
+const ROOM_ID_PARAM = "id";
+
+const Page = () => {
+  const params = useSearchParams();
   const [room, setRoom] = useState<SpecificRoomResponse>();
   const [schedule, setSchedule] = useState<RoomScheduleResponse>();
   const [openReservationModal, setOpenReservationModal] =
@@ -47,7 +50,10 @@ const Page = ({ params }: any) => {
   
 
   useEffect(() => {
-    RoomService.getOne(sala)
+    const id = params.get(ROOM_ID_PARAM);
+    if (!id) return;
+    const numericId = parseInt(id);
+    RoomService.getOne(numericId)
       .then((response) => {
         if (response.ok) return response.json();
       })
@@ -55,15 +61,15 @@ const Page = ({ params }: any) => {
         if (fetchedRoom) setRoom(fetchedRoom);
       });
 
-    RoomService.getSchedule(sala)
+    RoomService.getSchedule(numericId)
       .then((response) => {
         if (response.ok) return response.json();
       })
       .then((fetchedSchedule?: RoomScheduleResponse) => {
         if (fetchedSchedule) setSchedule(fetchedSchedule);
-        // TODO: Create Reservation view
+        // TODO: Create Reservation schedule view
       });
-  }, []);
+  }, [params]);
 
   return (
     <div className="flex flex-col justify-around place-items-center md:flex-row p-3">
