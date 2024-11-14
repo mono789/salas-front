@@ -10,16 +10,16 @@ const ReservationService = {
     return service(RESERVATIONS_ENDPOINT, METHOD.get, authorizedHeaders());
   },
 
-  save: function (reservation: ReservationRequest) {
+  saveSingleTimeReservation: function (reservation: ReservationRequest) {
     return service(
-      RESERVATIONS_ENDPOINT,
+      `${RESERVATIONS_ENDPOINT}/once`,
       METHOD.post,
       authorizedHeaders(),
       reservation,
     );
   },
 
-  saveClass: function (reservationClass: ClassReservationRequest) {
+  createClass: function (reservationClass: ClassReservationRequest) {
     return service(
       `${RESERVATIONS_ENDPOINT}/class`,
       METHOD.post,
