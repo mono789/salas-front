@@ -8,15 +8,21 @@ import UserService from "@/services/api/user.service";
 import { ReservationResponse } from "@/models/reservation";
 import BaseModal from "./BaseModal";
 import { Title } from "@mui/icons-material";
-import { ChangeEvent, FormEvent, useState, useEffect } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import {
   DEFAULT_HOURS,
   DEFAULT_RESERVATION_FORM_DATA,
   DEFAULT_RESERVATION_TYPES
 } from "@/utils/constants/component.constants";
-import {SpecificRoomResponse } from "@/models/room";
+import { SpecificRoomResponse } from "@/models/room";
 import { LocalStorageService } from "@/services/localstorage/local-storage.service";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
+
+interface UserData {
+  id: string;
+  token: string;
+  role: string;
+}
 
 
 
@@ -29,17 +35,26 @@ type ReservationModalProps = {
   userData?: UserResponse;
 };
 
-function ReservationModal({ opened, setOpened, room, userData }: ReservationModalProps) {
-  const router = useRouter();
-  const [reservation, setReservation] = useState<ReservationRequest>(DEFAULT_RESERVATION_FORM_DATA);
-  const [error, setError] = useState<string>("");
+function ReservationModal({
+  opened,
+  setOpened,
+  saveReservation,
+  room,
+}: ReservationModalProps) {
+  //const router = useRouter();
+  const [reservation, setReservation] = useState<ReservationRequest>(
+    DEFAULT_RESERVATION_FORM_DATA
+  );
+  const [error, setError] = useState<string>(" ");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [createdReservation, setCreatedReservation] = useState<ReservationResponse | null>(null);
- 
+  const [createdReservation, setCreatedReservation] =
+    useState<ReservationResponse | null>(null);
+  const userData: UserData | undefined = LocalStorageService.getItem("user") as
+    | UserData
+    | undefined;
   function handleChangeInput(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
     setReservation({ ...reservation, [id]: value });
-    console.log(room);
   }
 
   function handleChangeSelect(event: ChangeEvent<HTMLSelectElement>) {
@@ -93,15 +108,20 @@ function ReservationModal({ opened, setOpened, room, userData }: ReservationModa
     reservation.type = DEFAULT_RESERVATION_TYPES[0];
     reservation.startsAt = reservation.day + " " + reservation.startsAt;
     reservation.endsAt = reservation.day + " " + reservation.endsAt;
-    handleSaveReservation();
+    console.log("RESERVATION: ", reservation);
+    ReservationService.save(reservation).then((response) => {
+      if (response.ok) return response.json();
+    });
+    saveReservation(reservation);
   }
 
-  //si la reserva se creó correctamente y presiona finalizar, se redirige al home dependiendo del role
   function handleFinishClick() {
+    /*
+    
     if (userData?.role.roleName) {
       const path = userData?.role.roleName === "ADMIN" ? "/admin" : "/home";
-      router.push(path);
-    }
+      router.push();
+    }*/
   }
 
 
@@ -135,11 +155,13 @@ function ReservationModal({ opened, setOpened, room, userData }: ReservationModa
           {/* Nueva sección para Día, Hora de Inicio y Hora de Término en una sola fila */}
           <div className="grid grid-cols-3 gap-4 mt-4">
             <div>
-              <label htmlFor="day">Día</label>
+              <label htmlFor="day" className="block mb-1 font-medium">
+                Día
+              </label>
               <input
                 id="day"
                 type="date"
-                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+                className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={handleChangeInput}
               />
             </div>
