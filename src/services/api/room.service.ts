@@ -1,4 +1,4 @@
-import { RoomFilter, RoomRequest } from "@/models/room";
+import { RoomFilter, RoomRequest, FreeScheduleResponse  } from "@/models/room";
 import { METHOD, ROOMS_ENDPOINT } from "@/utils/constants/api.constants";
 import { authorizedHeaders, service } from "./base.service";
 
@@ -57,6 +57,13 @@ const RoomService = {
     if (date) endpoint = endpoint + `?date=${date}`;
     return service(endpoint, METHOD.get, authorizedHeaders());
   },
+
+  getFreeRoomSchedule: function (id: number, date: string) {
+    const endpoint = `${ROOMS_ENDPOINT}/${id}/freeSchedule?date=${date}`;
+    console.log("ENDPOINT: ",endpoint);
+    return service<FreeScheduleResponse[]>(endpoint, METHOD.get, authorizedHeaders());
+  },
+
 };
 
 export default RoomService;

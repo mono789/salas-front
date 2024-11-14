@@ -66,9 +66,15 @@ const Page = () => {
         if (response.ok) return response.json();
       })
       .then((fetchedSchedule?: RoomScheduleResponse) => {
-        if (fetchedSchedule) setSchedule(fetchedSchedule);
+        if (fetchedSchedule) {
+          setSchedule(fetchedSchedule);
+          console.log("SCHEDULE: ", schedule);
+        }
         // TODO: Create Reservation schedule view
       });
+
+
+      
   }, [params]);
 
   return (
