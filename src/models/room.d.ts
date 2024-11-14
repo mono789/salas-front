@@ -44,6 +44,10 @@ export interface RoomScheduleResponse {
     type: ReservationType;
 }
 
+export interface FreeScheduleResponse {
+    hour: string; // Hora disponible en formato "HH:mm"
+}
+
 export interface RoomFilter {
     implement?: string;
     restriction?: string;

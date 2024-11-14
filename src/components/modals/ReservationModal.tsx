@@ -1,31 +1,21 @@
 "use client";
 import { ReservationRequest } from "@/models/reservation";
-import { UserResponse } from "@/models/user";
-
 import ReservationService from "@/services/api/reservation.service";
-import UserService from "@/services/api/user.service";
+import RoomService from "@/services/api/room.service";
 
 import { ReservationResponse } from "@/models/reservation";
 import BaseModal from "./BaseModal";
 import { Title } from "@mui/icons-material";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import {
   DEFAULT_HOURS,
   DEFAULT_RESERVATION_FORM_DATA,
-  DEFAULT_RESERVATION_TYPES
+  DEFAULT_RESERVATION_TYPES,
 } from "@/utils/constants/component.constants";
-import { SpecificRoomResponse } from "@/models/room";
+import { SpecificRoomResponse, FreeScheduleResponse } from "@/models/room";
 import { LocalStorageService } from "@/services/localstorage/local-storage.service";
-import { useRouter } from "next/router";
-
-interface UserData {
-  id: string;
-  token: string;
-  role: string;
-}
-
-
-
+import { UserResponse } from "@/models/user";
+import { useRouter } from "next/navigation";
 
 type ReservationModalProps = {
   opened: boolean;
@@ -40,25 +30,53 @@ function ReservationModal({
   setOpened,
   saveReservation,
   room,
+  userData
 }: ReservationModalProps) {
-  //const router = useRouter();
+  const router = useRouter();
   const [reservation, setReservation] = useState<ReservationRequest>(
     DEFAULT_RESERVATION_FORM_DATA
   );
   const [error, setError] = useState<string>(" ");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [freeSchedule, setFreeSchedule] = useState<FreeScheduleResponse[]>([]); 
+
   const [createdReservation, setCreatedReservation] =
     useState<ReservationResponse | null>(null);
-  const userData: UserData | undefined = LocalStorageService.getItem("user") as
-    | UserData
-    | undefined;
   function handleChangeInput(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
     setReservation({ ...reservation, [id]: value });
   }
 
+  function handleChangeInputDate(event: ChangeEvent<HTMLInputElement>) {
+    const { id, value } = event.target;
+    setReservation({ ...reservation, [id]: value });
+    if (room?.id) {
+      const roomId = room.id;
+      RoomService.getFreeRoomSchedule(roomId, value)
+        .then((response) => {
+          if (response.ok) return response.json();
+        })
+        .then((fetchedSchedule?: FreeScheduleResponse[]) => {
+          if (fetchedSchedule) {
+            const formattedSchedule = fetchedSchedule.map((schedule) => ({
+              ...schedule,
+              hour: `${schedule.hour[0].toString().padStart(2, '0')}:00`, // Convierte a "HH:mm" con el 0 a la izquierda si es necesario
+            }));
+            setFreeSchedule(formattedSchedule);
+            console.log("FREE SCHEDULE: ", freeSchedule);
+          }
+          // TODO: Create Reservation schedule view
+        });
+  } else {
+      console.error("El ID de la sala es indefinido");
+      // Maneja el caso en que `room.id` sea `undefined`.
+  }
+      
+  }
+
   function handleChangeSelect(event: ChangeEvent<HTMLSelectElement>) {
     const { id, value } = event.target;
+    console.log(`Cambiando ${id} a ${value}`);
     setReservation((prevReservation) => ({
       ...prevReservation,
       [id]: value,
@@ -71,7 +89,7 @@ function ReservationModal({
 
   const handleSaveReservation = async () => {
     try {
-      const response = await ReservationService.save(reservation);
+      const response = await ReservationService.saveSingleTimeReservation(reservation);
   
       if (!response.ok) {
         // Extrae el mensaje de error de la respuesta
@@ -89,7 +107,8 @@ function ReservationModal({
     } catch (error: any) {
       setCreatedReservation(null);
       reservation.startsAt='';
-      reservation.endsAt=''; // Limpia los datos de reserva en caso de error
+      reservation.endsAt='';
+      reservation.date=''; // Limpia los datos de reserva en caso de error
       setError(error.message); // Establece el mensaje de error específico del backend
     }
   };
@@ -98,7 +117,7 @@ function ReservationModal({
   function handleOnFormSubmit(event: FormEvent) {
     event.preventDefault();
     console.log("RESERVATION: ",reservation)
-    if (!reservation.activityName || !reservation.activityDescription || !reservation.day || !reservation.startsAt || !reservation.endsAt) {
+    if (!reservation.activityName || !reservation.activityDescription || !reservation.date || !reservation.startsAt || !reservation.endsAt) {
       setError("Todos los campos son obligatorios");
       return;
     }
@@ -106,112 +125,122 @@ function ReservationModal({
     reservation.roomId = room?.id;
     reservation.userId = userData?.id;
     reservation.type = DEFAULT_RESERVATION_TYPES[0];
-    reservation.startsAt = reservation.day + " " + reservation.startsAt;
-    reservation.endsAt = reservation.day + " " + reservation.endsAt;
-    console.log("RESERVATION: ", reservation);
-    ReservationService.save(reservation).then((response) => {
-      if (response.ok) return response.json();
-    });
-    saveReservation(reservation);
+    handleSaveReservation();
   }
 
+  //si la reserva se creó correctamente y presiona finalizar, se redirige al home dependiendo del role
   function handleFinishClick() {
-    /*
-    
     if (userData?.role.roleName) {
       const path = userData?.role.roleName === "ADMIN" ? "/admin" : "/home";
-      router.push();
-    }*/
+      router.push(path);
+    }
   }
-
-
 
   return (
     <>
       <BaseModal open={opened}>
-        <form onSubmit={handleOnFormSubmit}>
-          <h3 className="mt-2 text-xl font-semibold text-gray-800 dark:text-white md:mt-0">
+        <form onSubmit={handleOnFormSubmit} className="p-4">
+          <h3 className="mb-4 text-xl font-semibold text-gray-800 dark:text-white text-center">
             Nueva Reserva
           </h3>
 
           {error && <p className="text-red-500 mb-4">{error}</p>}
 
-          <label htmlFor="activityName">Actividad</label>
-          <input
-            id="activityName"
-            className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
-            placeholder="Nombre de la actividad"
-            onChange={handleChangeInput}
-          />
+          <div className="mb-4">
+            <label htmlFor="activityName" className="block mb-1 font-medium">
+              Actividad
+            </label>
+            <input
+              id="activityName"
+              className="block w-full px-4 py-2 placeholder-gray-400  backdrop-blur-lg border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Nombre de la actividad"
+              aria-label="Activity Name"
+              onChange={handleChangeInput}
+            />
+          </div>
 
-          <label htmlFor="activityDescription">Descripción</label>
-          <input
-            id="activityDescription"
-            className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
-            placeholder="Descripción"
-            onChange={handleChangeInput}
-          />
+          <div className="mb-4">
+            <label
+              htmlFor="activityDescription"
+              className="block mb-1 font-medium"
+            >
+              Descripción
+            </label>
+            <input
+              id="activityDescription"
+              className="block w-full px-4 py-2 placeholder-gray-400  backdrop-blur-lg border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Descripción"
+              aria-label="Description"
+              onChange={handleChangeInput}
+            />
+          </div>
 
-          {/* Nueva sección para Día, Hora de Inicio y Hora de Término en una sola fila */}
-          <div className="grid grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-3 gap-4 mb-6">
             <div>
-              <label htmlFor="day" className="block mb-1 font-medium">
+              <label htmlFor="date" className="block mb-1 font-medium">
                 Día
               </label>
               <input
-                id="day"
+                id="date"
                 type="date"
                 className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
-                onChange={handleChangeInput}
+                onChange={handleChangeInputDate}
               />
             </div>
 
             <div>
-              <label htmlFor="startsAt">Hora inicio</label>
+              <label htmlFor="startsAt" className="block mb-1 font-medium">
+                Hora inicio
+              </label>
               <select
                 id="startsAt"
-                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+                className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={handleChangeSelect}
                 value={reservation.startsAt || ""}
               >
                 <option value="" disabled>
                   Selecciona una hora de inicio
                 </option>
-                {DEFAULT_HOURS.slice(0, -1).map((hour, index) => (
-                  <option key={index} value={hour}>
-                    {hour}
+                {freeSchedule.slice(0, -1).map((timeSlot, index) => (
+                  <option key={index} value={timeSlot.hour}>
+                    {timeSlot.hour}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label htmlFor="endsAt">Hora fin</label>
+              <label htmlFor="endsAt" className="block mb-1 font-medium">
+                Hora fin
+              </label>
               <select
                 id="endsAt"
-                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
+                className="block w-full px-4 py-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={handleChangeSelect}
                 value={reservation.endsAt || ""}
               >
                 <option value="" disabled>
                   Selecciona una hora de término
                 </option>
-                {DEFAULT_HOURS.slice(1).map((hour, index) => (
-                  <option key={index} value={hour}>
-                    {hour}
+                {freeSchedule.slice(1).map((timeSlot, index) => (
+                  <option key={index} value={timeSlot.hour}>
+                    {timeSlot.hour}
                   </option>
                 ))}
               </select>
             </div>
           </div>
-          {/* Contenedor para centrar los botones */}
-          <div className="flex justify-center gap-4 mt-6">
-            <button type="submit" className="px-8 py-2.5 text-white bg-green-500 rounded-md hover:bg-green-600">
+
+          <div className="flex justify-center gap-4">
+            <button
+              type="submit"
+              className="px-8 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 font-medium"
+            >
               Guardar reserva
             </button>
             <button
               type="button"
-              className="px-8 py-2.5 text-white bg-red-500 rounded-md hover:bg-red-600"
+              className="px-8 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 font-medium"
               onClick={handleCloseClick}
             >
               Cerrar
@@ -220,57 +249,60 @@ function ReservationModal({
         </form>
       </BaseModal>
 
-
       {showConfirmationModal && createdReservation && (
-  <BaseModal open={showConfirmationModal}>
-    <h3 className="mt-2 text-xl font-semibold text-center text-gray-800 dark:text-white md:mt-0">
-      RESERVA GENERADA
-    </h3>
-    <hr className="my-2" />
-    <div className="text-center">
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Estado reserva:</h2>
-        <p>{createdReservation.reservationState.state}</p>
-      </div>
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Actividad:</h2>
-        <p>{createdReservation.activityName}</p>
-      </div>
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Descripción:</h2>
-        <p>{createdReservation.activityDescription}</p>
-      </div>
-      <hr className="my-2" />
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Inicio:</h2>
-        <p>{createdReservation.startsAt}</p>
-      </div>
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Fin:</h2>
-        <p>{createdReservation.endsAt}</p>
-      </div>
-      <hr className="my-2" />
-      <div className="flex justify-center items-center">
-        <h2 className="font-bold mr-2">Sala:</h2>
-        <p>
-          {'Bloque ' +
-            `${room?.building ? room.building + '-' : ''}${room?.roomNum ?? ''}${
-              room?.subRoom && room.subRoom !== 0 ? ' Subsala ' + room.subRoom : ''
-            }${room?.roomName ? ' ' + room.roomName : ''}`}
-        </p>
-      </div>
-      <hr className="my-2" />
-      <button
-      className="px-8 py-2.5 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600"
-      onClick={handleFinishClick}
-    >
-      Finalizar
-    </button>
-    </div>
-    
-  </BaseModal>
-)}
+        <BaseModal open={showConfirmationModal}>
+          <h3 className="mt-2 text-xl font-semibold text-center text-gray-800 dark:text-white md:mt-0">
+            RESERVA GENERADA
+          </h3>
+          <hr className="my-2" />
+          <div className="text-center">
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Estado reserva:</h2>
+              <p>{createdReservation.reservationState.state}</p>
+            </div>
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Actividad:</h2>
+              <p>{createdReservation.activityName}</p>
+            </div>
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Descripción:</h2>
+              <p>{createdReservation.activityDescription}</p>
+            </div>
+            <hr className="my-2" />
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Inicio:</h2>
+              <p>{createdReservation.startsAt}</p>
+            </div>
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Fin:</h2>
+              <p>{createdReservation.endsAt}</p>
+            </div>
+            <hr className="my-2" />
+            <div className="flex justify-center items-center">
+              <h2 className="font-bold mr-2">Sala:</h2>
+              <p>
+                {"Bloque " +
+                  `${room?.building ? room.building + "-" : ""}${
+                    room?.roomNum ?? ""
+                  }${
+                    room?.subRoom && room.subRoom !== 0
+                      ? " Subsala " + room.subRoom
+                      : ""
+                  }${room?.roomName ? " " + room.roomName : ""}`}
+              </p>
+            </div>
+            <hr className="my-2" />
+            <button
+              className="px-8 py-2.5 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600"
+              onClick={handleFinishClick}
+            >
+              Finalizar
+            </button>
+          </div>
+        </BaseModal>
+      )}
     </>
   );
 }
+
 export default ReservationModal;

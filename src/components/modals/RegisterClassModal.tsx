@@ -4,7 +4,7 @@ import { UserResponse } from "@/models/user";
 
 import ReservationService from "@/services/api/reservation.service";
 import UserService from "@/services/api/user.service";
-
+import RoomService from "@/services/api/room.service";
 import { ReservationResponse } from "@/models/reservation";
 import BaseModal from "./BaseModal";
 import { Title } from "@mui/icons-material";
@@ -14,7 +14,7 @@ import {
   DEFAULT_RESERVATION_FORM_DATA,
   DEFAULT_RESERVATION_TYPES
 } from "@/utils/constants/component.constants";
-import {SpecificRoomResponse } from "@/models/room";
+import {SpecificRoomResponse, FreeScheduleResponse } from "@/models/room";
 import { LocalStorageService } from "@/services/localstorage/local-storage.service";
 import { useRouter } from "next/navigation";
 import { ReservationType, WeekDay } from "@/models/enums";
@@ -43,6 +43,8 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
   const [semesterStartsAt, setSemesterStartsAt] = useState<string>("");
   const [activityName, setActivityName] = useState<string>("");
   const [activityDescription, setActivityDescription] = useState<string>("");
+  const [freeStartSchedule, setFreeStartSchedule] = useState<FreeScheduleResponse[]>([]); 
+  const [freeEndSchedule, setFreeEndSchedule] = useState<FreeScheduleResponse[]>([]);
   const weekDayMap: Record<WeekDay, string> = {
     MONDAY: "Lunes",
     TUESDAY: "Martes",
@@ -51,6 +53,62 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
     FRIDAY: "Viernes",
     SATURDAY: "Sábado"
 };
+
+function handleChangeInputStartDate(event: ChangeEvent<HTMLInputElement>) {
+  const { id, value } = event.target;
+  console.log("Value: ", value);
+  setSemesterStartsAt(value);
+  if (room?.id) {
+    const roomId = room.id;
+    RoomService.getFreeRoomSchedule(roomId, value)
+      .then((response) => {
+        if (response.ok) return response.json();
+      })
+      .then((fetchedSchedule?: FreeScheduleResponse[]) => {
+        if (fetchedSchedule) {
+          const formattedSchedule = fetchedSchedule.map((schedule) => ({
+            ...schedule,
+            hour: `${schedule.hour[0].toString().padStart(2, '0')}:00`, // Convierte a "HH:mm" con el 0 a la izquierda si es necesario
+          }));
+          setFreeStartSchedule(formattedSchedule);
+          console.log("Formatted FREE SCHEDULE: ", formattedSchedule);
+        }
+        // TODO: Create Reservation schedule view
+      });
+  } else {
+    console.error("El ID de la sala es indefinido");
+  }
+    
+}
+
+function handleChangeInputEndDate(event: ChangeEvent<HTMLInputElement>) {
+  const { id, value } = event.target;
+  console.log("Value: ", value);
+  setSemesterEndsAt(value);
+  if (room?.id) {
+    const roomId = room.id;
+    RoomService.getFreeRoomSchedule(roomId, value)
+      .then((response) => {
+        if (response.ok) return response.json();
+      })
+      .then((fetchedSchedule?: FreeScheduleResponse[]) => {
+        if (fetchedSchedule) {
+          const formattedSchedule = fetchedSchedule.map((schedule) => ({
+              ...schedule,
+              hour: `${schedule.hour[0].toString().padStart(2, '0')}:00`, // Convierte a "HH:mm" con el 0 a la izquierda si es necesario
+            }));
+          setFreeEndSchedule(formattedSchedule);
+          console.log("FREE SCHEDULE: ", freeEndSchedule);
+        }
+        // TODO: Create Reservation schedule view
+      });
+} else {
+    console.error("El ID de la sala es indefinido");
+    // Maneja el caso en que `room.id` sea `undefined`.
+}
+    
+}
+
 
   function handleCloseClick() {
     setOpened(false);
@@ -102,7 +160,7 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
   const handleSaveClass = async () => {
     console.log("NEW RESERVATION: ",classReservation)
     try {
-      const response = await ReservationService.saveClass(classReservation);
+      const response = await ReservationService.createClass(classReservation);
   
       if (!response.ok) {
         // Extrae el mensaje de error de la respuesta
@@ -128,14 +186,11 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
 
   };
   
-
-
-
   return (
     <>
       <BaseModal open={opened}>
-      <div className="bg-gray-100 p-6 overflow-y-auto max-h-85">
-            <h2 className="text-gray-900 text-xl font-semibold title-font mb-5">
+      <div className="bg-gray-100 dark:bg-gray-800 p-6 overflow-y-auto max-h-85">
+        <h2 className="text-gray-900 dark:text-gray-100 text-xl font-semibold title-font mb-5 text-center">
               Gestión de horarios de clase
             </h2>
             <div className="relative mb-4">
@@ -164,19 +219,19 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
             <div className="relative mb-4">
               <label htmlFor="day">Inicio semestre</label>
               <input
-                id="day"
+                id="semesterStartsAt"
                 type="date"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-green-400 focus:ring-green-300 focus:ring-opacity-40 dark:focus:border-green-300 focus:outline-none focus:ring"
-                onChange={(e) => setSemesterStartsAt(e.target.value)}
+                onChange={handleChangeInputStartDate}
               />
             </div>
             <div className="relative mb-4">
               <label htmlFor="day">Fin semestre</label>
               <input
-                id="day"
+                id="semesterEndsAt"
                 type="date"
                 className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-green-400 focus:ring-green-300 focus:ring-opacity-40 dark:focus:border-green-300 focus:outline-none focus:ring"
-                onChange={(e) => setSemesterEndsAt(e.target.value)}
+                onChange={handleChangeInputEndDate}
               />
             </div>
             </div>
@@ -188,7 +243,7 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
               <select
                 id="day"
                 value={day || ""}
-                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md"
+                className="block w-full px-4 py-2 mt-2 placeholder-gray-400 border border-gray-200 rounded-lg dark:bg-gray-800"
                 onChange={(e) => setDay(e.target.value as WeekDay)}>
                 <option value="" disabled>
                     Selecciona un día
@@ -211,9 +266,9 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
                 <option value="" disabled>
                   Selecciona una hora de inicio
                 </option>
-                {DEFAULT_HOURS.slice(0, -1).map((hour, index) => (
-                  <option key={index} value={hour}>
-                    {hour}
+                {freeStartSchedule.slice(0, -1).map((timeSlot, index) => (
+                  <option key={index} value={timeSlot.hour}>
+                    {timeSlot.hour}
                   </option>
                 ))}
               </select>
@@ -228,11 +283,11 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
                 style={{ maxHeight: '150px', overflowY: 'auto' }} 
               >
                 <option value="" disabled>
-                  Fin
+                  Selecciona una hora de fin
                 </option>
-                {DEFAULT_HOURS.slice(0, -1).map((hour, index) => (
-                  <option key={index} value={hour}>
-                    {hour}
+                {freeEndSchedule.slice(1).map((timeSlot, index) => (
+                  <option key={index} value={timeSlot.hour}>
+                  {timeSlot.hour}
                   </option>
                 ))}
               </select>
@@ -275,7 +330,7 @@ function RegisterClassModal({ opened, setOpened, room, userData }: RegisterClass
               </tbody>
             </table>
             </div>
-            <div className="flex justify-center gap-4 mt-6"> {/* Cambia gap a justify-between para más espacio */}
+            <div className="flex justify-center gap-4 mt-6">
               <button
                 className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none"
                 onClick={handleAddClass}
