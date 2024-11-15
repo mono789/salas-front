@@ -12,7 +12,7 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: './e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -23,17 +23,18 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html'],
-    /*['monocart-reporter', {
-      name: "My Test Report",
-      outputFile: './monocart-report/index.html'
-    }]*/
+    //['html'],
+    ['monocart-reporter', {
+      name: "E2E Test Report",
+      outputFile: './monocart-report/index.html',
+      
+    }]
   ],
   
   /* Global setup and teardown scripts */
-  globalSetup: 'global.setup.ts',
+  /*globalSetup: 'global.setup.ts',
   globalTeardown: 'global-teardown.ts',
-
+  */
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -49,7 +50,7 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    /*
+    
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
@@ -59,7 +60,7 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
-    */
+    
 
     /* Test against mobile viewports. */
     // {

@@ -31,7 +31,7 @@ const config: Config = {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: "../coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -43,12 +43,13 @@ const config: Config = {
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
-     "json",
-     "text",
-     "lcov",
-     "clover"
+    "html",
+   "json",
+   "text",
+   "lcov",
+   "clover",
    ],
-
+   
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
 
@@ -129,7 +130,7 @@ const config: Config = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  // rootDir: undefined,
+  rootDir: './unit-tests',
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
