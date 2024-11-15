@@ -11,8 +11,7 @@
     "test:e2e": "playwright test",
     "test:e2e-onlyfailed": "playwright test --last-failed",
     "test:e2e-ui": "playwright test --ui",
-    "open-coverage-report": "xdg-open coverage/index.html",
-    "open-e2e-report": ""
+    "open-coverage-report": "xdg-open coverage/index.html"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -39,10 +38,10 @@
     "@playwright/test": "^1.48.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.8",
-    "@testing-library/react": "^16.0.0",
+    "@testing-library/react": "^16.0.1",
     "@types/node": "^20",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.19",
     "babel-jest": "^29.7.0",
     "eslint": "^8",
