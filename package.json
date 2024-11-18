@@ -8,9 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "unit-tests": "jest --coverage=true",
-    "test:e2e": "playwright test",
-    "test:e2e-onlyfailed": "playwright test --last-failed",
-    "test:e2e-ui": "playwright test --ui",
+    "e2e-tests": "playwright test",
+    "e2e-tests:onlyfailed": "playwright test --last-failed",
+    "e2e-tests:ui": "playwright test --ui",
     "open-coverage-report": "xdg-open coverage/index.html"
   },
   "dependencies": {
@@ -22,13 +22,11 @@
     "@iconify/react": "^5.0.1",
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
-    "jest-monocart-coverage": "^1.1.1",
     "next": "^14.2.3",
     "react": "^18",
     "react-calendar": "^5.0.0",
     "react-dom": "^18",
-    "react-select": "^5.8.2",
-    "ts-node": "^10.9.2"
+    "react-select": "^5.8.2"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -53,6 +51,8 @@
     "playwright": "^1.48.2",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
