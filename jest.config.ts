@@ -4,11 +4,11 @@
  */
 
 import type {Config} from 'jest';
-import nextJest from 'next/jest.js'
+import nextJest from 'next/jest.js';
 
 const createJestConfig = nextJest({
-  //Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: './',
+  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
+  dir: "."
 })
 
 const config: Config = {
@@ -28,7 +28,15 @@ const config: Config = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: undefined,
+  collectCoverageFrom: [
+    "**/*.{tsx,ts}",
+    "!**/node_modules/**",
+    "!**/public/**",
+    "!**/coverage/**",
+    "!**/vendor/**",
+    "!**/.next/**",
+    "!**/dist/**",
+  ],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
@@ -43,11 +51,12 @@ const config: Config = {
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
-     "json",
+    "html",
+    "json",
      "text",
      "lcov",
      "clover"
-   ],
+  ],
 
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
@@ -99,7 +108,7 @@ const config: Config = {
   // moduleNameMapper: {},
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-  // modulePathIgnorePatterns: [],
+  modulePathIgnorePatterns: ["spec.*"],
 
   // Activates notifications for test results
   // notify: false,
@@ -129,7 +138,7 @@ const config: Config = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  // rootDir: undefined,
+  //rootDir: './unit-tests',
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
@@ -152,7 +161,7 @@ const config: Config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-node",
+  testEnvironment: "jsdom",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},

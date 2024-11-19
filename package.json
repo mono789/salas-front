@@ -7,8 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "unit-tests": "jest --coverage=true",
+    "e2e-tests": "playwright test",
+    "e2e-tests:onlyfailed": "playwright test --last-failed",
+    "e2e-tests:ui": "playwright test --ui",
+    "open-coverage-report": "xdg-open coverage/index.html"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -19,29 +22,37 @@
     "@iconify/react": "^5.0.1",
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
-    "bootstrap": "^5.3.2",
-    "bootstrap-icons": "^1.11.2",
     "next": "^14.2.3",
     "react": "^18",
     "react-calendar": "^5.0.0",
     "react-dom": "^18",
-    "react-select": "^5.8.2",
-    "ts-node": "^10.9.2"
+    "react-select": "^5.8.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "@jest/globals": "^29.7.0",
+    "@playwright/test": "^1.48.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.8",
-    "@testing-library/react": "^16.0.0",
+    "@testing-library/react": "^16.0.1",
     "@types/node": "^20",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.19",
+    "babel-jest": "^29.7.0",
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "monocart-coverage-reports": "^2.11.2",
+    "monocart-reporter": "^2.9.9",
+    "playwright": "^1.48.2",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
