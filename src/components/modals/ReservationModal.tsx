@@ -1,12 +1,10 @@
 "use client";
-import { ReservationRequest } from "@/models/reservation";
+import { ReservationRequest, ReservationResponse } from "@/models/reservation";
 import ReservationService from "@/services/api/reservation.service";
 import RoomService from "@/services/api/room.service";
 
-import { ReservationResponse } from "@/models/reservation";
 import BaseModal from "./BaseModal";
-import { Title } from "@mui/icons-material";
-import { ChangeEvent, FormEvent, useState, useEffect } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import {
   DEFAULT_HOURS,
   DEFAULT_RESERVATION_FORM_DATA,
@@ -30,7 +28,7 @@ function ReservationModal({
   setOpened,
   saveReservation,
   room,
-  userData
+  userData,
 }: ReservationModalProps) {
   const router = useRouter();
   const [reservation, setReservation] = useState<ReservationRequest>(
@@ -38,7 +36,7 @@ function ReservationModal({
   );
   const [error, setError] = useState<string>(" ");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [freeSchedule, setFreeSchedule] = useState<FreeScheduleResponse[]>([]); 
+  const [freeSchedule, setFreeSchedule] = useState<FreeScheduleResponse[]>([]);
 
   const [createdReservation, setCreatedReservation] =
     useState<ReservationResponse | null>(null);
@@ -60,18 +58,17 @@ function ReservationModal({
           if (fetchedSchedule) {
             const formattedSchedule = fetchedSchedule.map((schedule) => ({
               ...schedule,
-              hour: `${schedule.hour[0].toString().padStart(2, '0')}:00`, // Convierte a "HH:mm" con el 0 a la izquierda si es necesario
+              hour: `${schedule.hour[0].toString().padStart(2, "0")}:00`, // Convierte a "HH:mm" con el 0 a la izquierda si es necesario
             }));
             setFreeSchedule(formattedSchedule);
             console.log("FREE SCHEDULE: ", freeSchedule);
           }
           // TODO: Create Reservation schedule view
         });
-  } else {
+    } else {
       console.error("El ID de la sala es indefinido");
       // Maneja el caso en que `room.id` sea `undefined`.
-  }
-      
+    }
   }
 
   function handleChangeSelect(event: ChangeEvent<HTMLSelectElement>) {
@@ -89,35 +86,41 @@ function ReservationModal({
 
   const handleSaveReservation = async () => {
     try {
-      const response = await ReservationService.saveSingleTimeReservation(reservation);
-  
+      const response = await ReservationService.saveSingleTimeReservation(
+        reservation
+      );
+
       if (!response.ok) {
         // Extrae el mensaje de error de la respuesta
         const errorData = await response.json();
         throw new Error(errorData.message || "Error al crear la reserva.");
       }
-  
+
       const data: ReservationResponse = await response.json();
       setCreatedReservation(data);
       console.log("DATA: ", data);
       setError(""); // Limpia el error si la reserva fue exitosa
       setShowConfirmationModal(true); // Muestra el modal de confirmación
       setOpened(false); // Cierra el modal de reserva
-  
     } catch (error: any) {
       setCreatedReservation(null);
-      reservation.startsAt='';
-      reservation.endsAt='';
-      reservation.date=''; // Limpia los datos de reserva en caso de error
+      reservation.startsAt = "";
+      reservation.endsAt = "";
+      reservation.date = ""; // Limpia los datos de reserva en caso de error
       setError(error.message); // Establece el mensaje de error específico del backend
     }
   };
-  
 
   function handleOnFormSubmit(event: FormEvent) {
     event.preventDefault();
-    console.log("RESERVATION: ",reservation)
-    if (!reservation.activityName || !reservation.activityDescription || !reservation.date || !reservation.startsAt || !reservation.endsAt) {
+    console.log("RESERVATION: ", reservation);
+    if (
+      !reservation.activityName ||
+      !reservation.activityDescription ||
+      !reservation.date ||
+      !reservation.startsAt ||
+      !reservation.endsAt
+    ) {
       setError("Todos los campos son obligatorios");
       return;
     }
@@ -202,7 +205,7 @@ function ReservationModal({
                   Selecciona una hora de inicio
                 </option>
                 {freeSchedule.slice(0, -1).map((timeSlot, index) => (
-                  <option key={index} value={timeSlot.hour}>
+                  <option key={index + timeSlot.hour} value={timeSlot.hour}>
                     {timeSlot.hour}
                   </option>
                 ))}
@@ -223,7 +226,7 @@ function ReservationModal({
                   Selecciona una hora de término
                 </option>
                 {freeSchedule.slice(1).map((timeSlot, index) => (
-                  <option key={index} value={timeSlot.hour}>
+                  <option key={index + timeSlot.hour} value={timeSlot.hour}>
                     {timeSlot.hour}
                   </option>
                 ))}

@@ -1,13 +1,11 @@
 "use client";
-import { ClassReservationRequest, SessionRequest } from "@/models/reservation";
+import { ClassReservationRequest, SessionRequest, ReservationResponse } from "@/models/reservation";
 import { UserResponse } from "@/models/user";
 
 import ReservationService from "@/services/api/reservation.service";
 import UserService from "@/services/api/user.service";
 import RoomService from "@/services/api/room.service";
-import { ReservationResponse } from "@/models/reservation";
 import BaseModal from "./BaseModal";
-import { Title } from "@mui/icons-material";
 import { ChangeEvent, FormEvent, useState, useEffect } from "react";
 import {
   DEFAULT_HOURS,
