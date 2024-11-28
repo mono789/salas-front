@@ -1,71 +1,52 @@
-import React from "react";
+'use client'
+
+import React, { useState } from "react";
+import { useRouter } from "next/navigation"
 import Image from "next/image";
+import { Briefcase, Clock } from 'lucide-react';
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter()
+
   return (
-    <div>
-      <nav
-        x-data="{ isOpen: false }"
-        className="relative bg-white shadow dark:bg-gray-900"
-      >
-        <div className="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center md:-mx-1">
-          <div className="flex items-center justify-between">
-            <a href="/salasinfo/home">
-              {/*Logo DRAI*/}
+    <nav className="relative bg-white shadow dark:bg-gray-900">
+      <div className="container px-6 py-4 mx-auto">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <a href="/salasinfo/home" className="flex-shrink-0">
               <Image
                 src="https://arquimedes.udea.edu.co/drai.png"
                 alt="logo DRAI"
-                width={
-                  106
-                } /* Para conservar un aspect ratio de aproximadamente 16:9*/
+                width={106}
                 height={60}
+                className="h-12 w-auto"
               />
             </a>
+          </div>
 
-            <div className="flex lg:hidden">
-              <button
-                x-cloak="true"
-                type="button"
-                className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
-                aria-label="toggle menu"
-              >
-                <svg
-                  x-show="!isOpen"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 8h16M4 16h16"
-                  />
-                </svg>
-
-                <svg
-                  x-show="isOpen"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
+        
+          <div className="hidden md:flex items-center space-x-6"> 
+          <button>
+            <a
+              onClick={() => router.push('/admin/roomManagement')}
+              className="flex items-center space-x-2 text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:text-blue-600 dark:focus:text-blue-400 transition duration-150 ease-in-out"
+            >
+              <Briefcase className="w-3 h-3" /> 
+              <span className="text-base font-semibold">Gestión de Salas</span> 
+            </a>
+          </button>
+            <a
+              href="#"
+              className="flex items-center space-x-2 text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:text-blue-600 dark:focus:text-blue-400 transition duration-150 ease-in-out"
+            >
+              <Clock className="w-3 h-3" />
+              <span className="text-base font-semibold">Reservas Pendientes</span> 
+            </a>
           </div>
         </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 };
 

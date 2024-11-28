@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ApplicationService from "@/services/api/application.service"
+import ImplementService from "@/services/api/implement.service"
+import { ApplicationResponse } from "@/models/application";
+import { ImplementResponse } from "@/models/implement";
+import {ChevronUp , ChevronDown} from "lucide-react";
+
 
 interface FiltersProps {
   softwareFilter: string;
@@ -36,6 +42,34 @@ const Filters: React.FC<FiltersProps> = ({
   handleImplementChange,
 }) => {
   const [showFilters, setShowFilters] = useState(false);
+  const [softwareOptions, setSoftwareOptions] = useState<ApplicationResponse[]>([]);
+  const [implementOptions, setImplementOptions] = useState<ImplementResponse[]>([]);
+
+  useEffect(() => {
+    const fetchSoftwareOptions = async () => {
+      try {
+        const response = await ApplicationService.getAll();
+        const data: ApplicationResponse[] = await response.json(); // Convertimos la respuesta a JSON
+        setSoftwareOptions(data);
+      } catch (error) {
+        console.error("Error al obtener las opciones de software:", error);
+      }
+    };
+
+    const fetchImplementOptions = async () => {
+      try {
+        const response = await ImplementService.getAll();
+        const data: ImplementResponse[] = await response.json(); // Convertimos la respuesta a JSON
+        setImplementOptions(data);
+      } catch (error) {
+        console.error("Error al obtener las opciones de implementos:", error);
+      }
+    };
+
+    fetchSoftwareOptions();
+    fetchImplementOptions();
+  }, []);
+  
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
@@ -53,23 +87,17 @@ const Filters: React.FC<FiltersProps> = ({
 
         {/* Filtro por palabra clave */}
         <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          <button
-            onClick={() => toggleSection("keyword")}
-            className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
-          >
-            <span>Palabra clave</span>
-            <svg
-              className={`w-5 h-5 transition-transform ${showKeywordSection ? "transform rotate-180" : ""}`}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
+        <button
+          onClick={() => toggleSection("keyword")}
+          className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+        >
+          <span>Palabra clave</span>
+          {showKeywordSection ? (
+            <ChevronUp className="w-5 h-5 transition-transform" />
+          ) : (
+            <ChevronDown className="w-5 h-5 transition-transform" />
+          )}
+        </button>
           {showKeywordSection && (
             <div className="mt-2">
               <input
@@ -85,23 +113,17 @@ const Filters: React.FC<FiltersProps> = ({
 
         {/* Filtro de fecha y hora */}
         <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          <button
-            onClick={() => toggleSection("date")}
-            className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
-          >
-            <span>Fecha y Hora</span>
-            <svg
-              className={`w-5 h-5 transition-transform ${showDateSection ? "transform rotate-180" : ""}`}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
+        <button
+          onClick={() => toggleSection("date")}
+          className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+        >
+          <span>Fecha y Hora</span>
+          {showDateSection ? (
+            <ChevronUp className="w-5 h-5 transition-transform" />
+          ) : (
+            <ChevronDown className="w-5 h-5 transition-transform" />
+          )}
+        </button>
           {showDateSection && (
             <div className="mt-2 space-y-2">
               <div>
@@ -126,80 +148,68 @@ const Filters: React.FC<FiltersProps> = ({
           )}
         </div>
 
-        {/* Filtro de Software */}
-        <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          <button
-            onClick={() => toggleSection("software")}
-            className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
-          >
-            <span>Software</span>
-            <svg
-              className={`w-5 h-5 transition-transform ${showSoftwareSection ? "transform rotate-180" : ""}`}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-          {showSoftwareSection && (
-            <div className="mt-2 space-y-2">
-              {["Photoshop", "Zoom", "Office"].map((software) => (
-                <label key={software} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
-                    checked={selectedSoftware.includes(software)}
-                    onChange={() => handleSoftwareCheckboxChange(software)}
-                  />
-                  <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">{software}</span>
-                </label>
-              ))}
-            </div>
+      {/* Filtro por Software */}
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+        <button
+          onClick={() => toggleSection("software")}
+          className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+        >
+          <span>Software</span>
+          {showSoftwareSection ? (
+            <ChevronUp className="w-5 h-5 transition-transform" />
+          ) : (
+            <ChevronDown className="w-5 h-5 transition-transform" />
           )}
-        </div>
-
-        {/* Filtro de Implementos */}
-        <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
-          <button
-            onClick={() => toggleSection("implement")}
-            className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
-          >
-            <span>Implementos</span>
-            <svg
-              className={`w-5 h-5 transition-transform ${showImplementSection ? "transform rotate-180" : ""}`}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-          {showImplementSection && (
-            <div className="mt-2 space-y-2">
-              {["Proyector", "Pizarra", "Sistema de Sonido"].map((implement) => (
-                <label key={implement} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
-                    checked={selectedImplements.includes(implement)}
-                    onChange={() => handleImplementChange(implement)}
-                  />
-                  <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">{implement}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
+        </button>
+        {showSoftwareSection && (
+          <div className="mt-2 space-y-2 max-h-40 overflow-y-auto"> {/* max-h-40 y overflow-y-auto */}
+            {softwareOptions.map((software) => (
+              <label key={software.id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
+                  checked={selectedSoftware.includes(software.name)}
+                  onChange={() => handleSoftwareCheckboxChange(software.name)}
+                />
+                <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">{software.name}</span>
+              </label>
+            ))}
+          </div>
+        )}
       </div>
-    </div>
-  );
-};
+
+      {/* Filtro por Implementos */}
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
+        <button
+          onClick={() => toggleSection("implement")}
+          className="w-full flex justify-between items-center text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+        >
+          <span>Implementos</span>
+          {showImplementSection ? (
+            <ChevronUp className="w-5 h-5 transition-transform" />
+          ) : (
+            <ChevronDown className="w-5 h-5 transition-transform" />
+          )}
+        </button>
+        {showImplementSection && (
+          <div className="mt-2 space-y-2 max-h-40 overflow-y-auto"> {/* max-h-40 y overflow-y-auto */}
+            {implementOptions.map((implement) => (
+              <label key={implement.id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
+                  checked={selectedImplements.includes(implement.name)}
+                  onChange={() => handleImplementChange(implement.name)}
+                />
+                <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">{implement.name}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+            </div>
+          </div>
+        );
+      };
 
 export default Filters;

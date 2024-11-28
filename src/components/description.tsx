@@ -31,7 +31,6 @@ const RoomDescription = ({
             </div>
 
             <h2 className="mt-2 text-xl font-semibold text-gray-800 dark:text-white md:mt-0">
-              {mapRoomName(room)}
             </h2>
 
             <div className="mt-2 text-sm text-gray-700 dark:text-gray-200">
@@ -52,7 +51,7 @@ const RoomDescription = ({
                 {room.implements.map((implement) => {
                   return (
                     <span key={implement.id}>
-                      {implement.name} - {implement.state}
+                      {implement.name}
                     </span>
                   );
                 })}
@@ -63,7 +62,7 @@ const RoomDescription = ({
               {room.software.map((application) => {
                 return (
                   <span key={application.id}>
-                    {application.name} - {application.version}
+                    {application.name}
                   </span>
                 );
               })}

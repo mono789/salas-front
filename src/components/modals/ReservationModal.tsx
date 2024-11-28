@@ -43,6 +43,7 @@ function ReservationModal({
   function handleChangeInput(event: ChangeEvent<HTMLInputElement>) {
     const { id, value } = event.target;
     setReservation({ ...reservation, [id]: value });
+    console.log(room);
   }
 
   function handleChangeInputDate(event: ChangeEvent<HTMLInputElement>) {
@@ -307,5 +308,4 @@ function ReservationModal({
     </>
   );
 }
-
 export default ReservationModal;
