@@ -3,4 +3,10 @@ export interface RestrictionResponse {
     description: string;
 }
 
+export interface RestrictionRequest {
+    description: string;
+  }
 
+export interface RestrictionFilter {
+    description?: string;
+ }

@@ -11,6 +11,8 @@ export interface RoomRequest {
     roomNum?: string;
     roomName?: string;
     subRoom?: number;
+    implementIds?: Array<number>;
+    softwareIds?: Array<number>;
 }
 
 // Responses
@@ -19,7 +21,7 @@ export interface RoomResponse {
     computerAmount: number;
     building: string;
     roomNum: string;
-    roomName?: string;
+    roomName: string;
     subRoom?: number;
 }
 
@@ -28,7 +30,7 @@ export interface SpecificRoomResponse {
     computerAmount: number;
     building: string;
     roomNum: string;
-    roomName?: string;
+    roomName: string;
     subRoom?: number;
     software: Array<ApplicationResponse>;
     restrictions: Array<RestrictionResponse>;

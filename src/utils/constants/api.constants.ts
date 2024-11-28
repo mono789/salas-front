@@ -11,6 +11,7 @@ export const ROOMS_ENDPOINT = "/rooms";
 export const RESERVATIONS_ENDPOINT = "/reservations";
 export const APPLICATIONS_ENDPOINT = "/applications";
 export const IMPLEMENTS_ENDPOINT = "/implements";
+export const RESTRICTIONS_ENDPOINT = "/restrictions";
 
 export const METHOD: Methods = {
     get: "GET",

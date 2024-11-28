@@ -4,8 +4,11 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { RoomResponse, SpecificRoomResponse } from "@/models/room"
 import RoomService from "@/services/api/room.service"
-import { Trash2, Edit, Monitor } from 'lucide-react'
+import Pagination from "@/components/Pagination";
 import RoomModal from "@/components/modals/RoomModal"
+import RoomCard from "@/components/RoomCard"
+import { Search } from "lucide-react";
+import DeleteRoomModal from "@/components/modals/DeleteRoomModal";
 
 export default function RoomsPage() {
   const router = useRouter()
@@ -13,13 +16,22 @@ export default function RoomsPage() {
   const [filteredRooms, setFilteredRooms] = useState<SpecificRoomResponse[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingRoom, setEditingRoom] = useState<SpecificRoomResponse | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [roomsPerPage] = useState(9)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [roomToDelete, setRoomToDelete] = useState<SpecificRoomResponse | null>(null);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     fetchRooms()
   }, [])
+  
+  useEffect(() => {
+    const filtered = rooms.filter((room) =>
+      room.roomName.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredRooms(filtered);
+  }, [rooms, searchText]);
 
   const fetchRooms = async () => {
     try {
@@ -43,52 +55,54 @@ export default function RoomsPage() {
       setFilteredRooms(detailedRooms)
     } catch (error) {
       console.error("Error fetching rooms:", error)
-    } finally {
-      setIsLoading(false)
-    }
+    } 
   }
 
-  const handleAddRoom = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAddRoom = async (event: React.FormEvent<HTMLFormElement>, implementIds: number[], softwareIds: number[], restrictionIds: number[]) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-
+  
     const location = (formData.get("location") as string).trim();
     if (!location.includes('-')) {
-        alert("Formato de ubicación inválido. Debe ser en formato XX-XXX (ejemplo: 21-120)");
-        return;
+      alert("Formato de ubicación inválido. Debe ser en formato XX-XXX (ejemplo: 21-120)");
+      return;
     }
-
+  
     const [building, roomNum] = location.split('-');
-
+  
     if (!/^\d+$/.test(roomNum)) {
-        alert("El número de sala debe ser un valor numérico");
-        return;
+      alert("El número de sala debe ser un valor numérico");
+      return;
     }
-
+  
     const newRoom = {
-        roomId: location,
-        computerAmount: parseInt(formData.get("capacity") as string),
-        building,
-        roomNum,
-        roomName: formData.get("name") as string,
-        subRoom: parseInt(formData.get("subroom") as string) || 0
-    };
+      roomId: location,
+      computerAmount: parseInt(formData.get("capacity") as string),
+      building,
+      roomNum,
+      roomName: formData.get("name") as string,
+      subRoom: parseInt(formData.get("subroom") as string) || 0,
+      implementIds: implementIds,
+      softwareIds: softwareIds,
+      restrictionIds: restrictionIds
 
+    };
+  
     try {
-        const response = await RoomService.save(newRoom);
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Error al guardar la sala');
-        }
-        await fetchRooms();
-        setIsModalOpen(false);
+      const response = await RoomService.save(newRoom);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al guardar la sala');
+      }
+      await fetchRooms();
+      setIsModalOpen(false);
     } catch (error) {
-        console.error("Error al agregar la sala:", error);
-        alert(`Error al agregar la sala: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+      console.error("Error al agregar la sala:", error);
+      alert(`Error al agregar la sala: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
   };
 
-  const handleEditRoom = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleEditRoom = async (event: React.FormEvent<HTMLFormElement>, implementIds: number[], softwareIds: number[], restrictionIds: number[]) => {
     event.preventDefault();
     if (!editingRoom) return;
 
@@ -113,7 +127,10 @@ export default function RoomsPage() {
         building,
         roomNum,
         roomName: formData.get("name") as string,
-        subRoom: parseInt(formData.get("subroom") as string) || 0
+        subRoom: parseInt(formData.get("subroom") as string) || 0,
+        implementIds: implementIds,
+        softwareIds: softwareIds,
+        restrictionIds: restrictionIds
     };
 
     try {
@@ -124,35 +141,41 @@ export default function RoomsPage() {
         }
         await fetchRooms();
         setEditingRoom(null);
+        setIsModalOpen(false);
     } catch (error) {
         console.error("Error al editar la sala:", error);
         alert(`Error al editar la sala: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     }
   };
 
-  const handleDeleteRoom = async (id: number) => {
+  const handleDeleteRoom = (room: SpecificRoomResponse) => {
+    setRoomToDelete(room);
+    setDeleteModalOpen(true);
+  };
+  
+  const confirmDeleteRoom = async () => {
+    if (!roomToDelete) return;
+  
     try {
-      const roomDetails = await RoomService.getOne(id);
-      if (!roomDetails.ok) {
-        throw new Error('Error al obtener detalles de la sala');
-      }
-
-      const response = await RoomService.delete(id);
+      const response = await RoomService.delete(roomToDelete.id);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Error al eliminar la sala');
       }
       await fetchRooms();
+      setDeleteModalOpen(false);
+      setRoomToDelete(null);
     } catch (error) {
       console.error("Error al eliminar la sala:", error);
     }
   };
+  
 
-  const handleModalSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleModalSubmit = (event: React.FormEvent<HTMLFormElement>, implementIds: number[], softwareIds: number[], restrictionIds: number[]) => {
     if (editingRoom) {
-      handleEditRoom(event);
+      handleEditRoom(event, implementIds, softwareIds, restrictionIds);
     } else {
-      handleAddRoom(event);
+      handleAddRoom(event, implementIds, softwareIds, restrictionIds);
     }
   };
 
@@ -168,17 +191,6 @@ export default function RoomsPage() {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="animate-pulse flex flex-col items-center space-y-4">
-          <div className="w-14 h-14 bg-blue-500 rounded-full animate-bounce"></div>
-          <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">Cargando salas...</div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-800 p-6 transition-all duration-300">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -192,20 +204,14 @@ export default function RoomsPage() {
                 <input
                   type="text"
                   placeholder="Buscar salas..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
                   className="w-full px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-all duration-300"
                 />
-                <svg
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <Search 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+                  size={16} 
+                />
               </div>
               <button
                 onClick={() => setIsModalOpen(true)}
@@ -225,98 +231,26 @@ export default function RoomsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {currentRooms.map(room => (
-            <div key={room.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-102">
-              <div className="p-6 space-y-4">
-                <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-3">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">{room.roomName}</h2>
-                  <span className="text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900 px-3 py-1 rounded-full">
-                    {`${room.building}-${room.roomNum}`}
-                  </span>
-                </div>
-                <div className="space-y-4">
-                  <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Monitor className="w-6 h-6 text-blue-500" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Capacidad</p>
-                        <p className="text-base font-semibold text-gray-900 dark:text-white">{room.computerAmount} computadores</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Software</h3>
-                      <ul className="space-y-2">
-                        {room.software.slice(0, 3).map((app) => (
-                          <li key={app.id} className="flex items-center text-sm text-gray-700 dark:text-gray-300">
-                            <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                            {app.name}
-                          </li>
-                        ))}
-                        {room.software.length > 3 && (
-                          <li className="text-sm text-blue-500">+{room.software.length - 3} más</li>
-                        )}
-                      </ul>
-                    </div>
-
-                    <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Implementos</h3>
-                      <ul className="space-y-2">
-                        {room.implements.slice(0, 3).map((implement) => (
-                          <li key={implement.id} className="flex items-center text-sm text-gray-700 dark:text-gray-300">
-                            <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                            {implement.name}
-                          </li>
-                        ))}
-                        {room.implements.length > 3 && (
-                          <li className="text-sm text-blue-500">+{room.implements.length - 3} más</li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-700 px-6 py-3 flex justify-end space-x-3">
-              <button
-                onClick={() => setEditingRoom(room)}
-                className="w-8 h-8 flex items-center justify-center text-gray-900 dark:text-white rounded-full hover:bg-yellow-50 hover:text-yellow-600 dark:hover:bg-yellow-600 dark:hover:text-yellow-50 transition-colors duration-300"
-                aria-label="Editar"
-              >
-                <Edit size={19} />
-              </button>
-              <button
-                onClick={() => handleDeleteRoom(room.id)}
-                className="w-8 h-8 flex items-center justify-center text-gray-900 dark:text-white rounded-full hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900 dark:hover:text-red-50 transition-colors duration-300"
-                aria-label="Eliminar"
-              >
-                <Trash2 size={20} />
-              </button>
-              </div>
-            </div>
+            <RoomCard 
+              key={room.id}
+              room={room}
+              isAdmin={true}
+              onEdit={() => {
+                setEditingRoom(room);
+                setIsModalOpen(true);
+              }}
+              onDelete={() => handleDeleteRoom(room)}
+              className="w-full"
+            />
           ))}
         </div>
 
-        {/* Pagination */}
-        <div className="flex justify-center mt-8">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => paginate(i + 1)}
-              className={`mx-2 px-4 py-2 rounded-md text-lg ${
-                currentPage === i + 1
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
+        <Pagination 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          onPageChange={(page) => setCurrentPage(page)} 
+        />
+
       </div>
 
       <RoomModal
@@ -325,6 +259,14 @@ export default function RoomsPage() {
         onSubmit={handleModalSubmit}
         editingRoom={editingRoom}
       />
+
+      <DeleteRoomModal
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={confirmDeleteRoom}
+        roomName={roomToDelete?.roomName || ''}
+      />
+
     </div>
   )
 }
